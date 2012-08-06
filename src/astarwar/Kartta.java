@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.Scanner;
 
 /**
- *
+ * Testiä
  * @author pxkorpel
  */
 public class Kartta {
