@@ -11,12 +11,18 @@ import java.io.FileNotFoundException;
  * @author pxkorpel
  */
 public class Astarwar {
-        /**
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-        
-       Kartta kartta = new Kartta();
-       kartta.luetiedosto();
-   }
+
+        Kartta kartta = new Kartta();
+        kartta.luetiedostotaulukkoon();
+        kartta.arvotareitti(kartta.kartta);
+
+        kartta.tulostakartta(kartta.kartta);
+        kartta.tulostakartta(kartta.reittikartta);
+        System.out.println(kartta.arvioituetäisyys());
+    }
 }
