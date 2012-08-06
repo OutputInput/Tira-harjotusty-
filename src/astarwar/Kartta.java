@@ -23,7 +23,6 @@ public class Kartta {
     int loppupistey;
     int loppupistex;
 
-
     public void luetiedostotaulukkoon() throws FileNotFoundException {
 
         System.out.println("tiedoston nimi");
@@ -113,9 +112,14 @@ public class Kartta {
         return arvokartta;
     }
 
-    public void arvioituetäisyys() {
-        
-        
-        
+    public int arvioituetäisyys() {
+
+        int pistex = alkupistex - loppupistex;
+        int pistey = alkupistey - loppupistey;
+
+        int summa = (int) Math.pow(pistex, 2);
+        summa = summa + (int) Math.pow(pistey, 2);
+
+        return summa;
     }
 }
