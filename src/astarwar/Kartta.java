@@ -18,6 +18,11 @@ public class Kartta {
     int kartankoko = 10;
     char[][] kartta = new char[kartankoko][kartankoko];
     char[][] reittikartta = new char[kartankoko][kartankoko];
+    int alkupistey;
+    int alkupistex;
+    int loppupistey;
+    int loppupistex;
+
 
     public void luetiedostotaulukkoon() throws FileNotFoundException {
 
@@ -65,6 +70,9 @@ public class Kartta {
                 if (arvokartta[n][i] == 0) {
                     reittikartta[n][i] = 'A';
                 }
+                if (arvokartta[n][i] == -1) {
+                    reittikartta[n][i] = 'L';
+                }
             }
         }
     }
@@ -81,23 +89,33 @@ public class Kartta {
     }
 
     public int[][] arvotakartta(char[][] kartta) {
-        
+
         int[][] arvokartta = new int[kartankoko][kartankoko];
-        for (int n = 0; n < kartankoko; n++) {
-            for (int i = 0; i < kartankoko; i++) {
-                if (kartta[n][i] == '#') {
-                    arvokartta[n][i] = 10000;
+        for (int y = 0; y < kartankoko; y++) {
+            for (int x = 0; x < kartankoko; x++) {
+                if (kartta[y][x] == '#') {
+                    arvokartta[y][x] = 10000;
                 } else {
-                    arvokartta[n][i] = 1;
+                    arvokartta[y][x] = 1;
                 }
-                if(kartta[n][i] == 'A'){
-                    arvokartta[n][i] = 0;
+                if (kartta[y][x] == 'A') {
+                    arvokartta[y][x] = 0;
+                    alkupistey = y;
+                    alkupistex = x;
                 }
-                if(kartta[n][i] == 'L'){
-                    arvokartta[n][i] = -1;
+                if (kartta[y][x] == 'L') {
+                    arvokartta[y][x] = -1;
+                    loppupistey = y;
+                    loppupistex = x;
                 }
             }
         }
         return arvokartta;
+    }
+
+    public void arvioituetäisyys() {
+        
+        
+        
     }
 }
