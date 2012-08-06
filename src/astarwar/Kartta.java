@@ -26,23 +26,20 @@ public class Kartta {
         File tiedosto_olio = new File(tiedostonNimi);
         if (!tiedosto_olio.exists()) {
             System.out.println("Tiedostoa " + tiedostonNimi + " ei löydy!");
-            return; // keskeytetään kaikki!
+            return;
         }
 
         Scanner syöttötiedosto = new Scanner(tiedosto_olio);
-        Scanner syöttötiedosto2 = new Scanner(tiedosto_olio);
-        String rivi1 = syöttötiedosto2.nextLine();
         while (syöttötiedosto.hasNextLine()) {
 
-            for (int n = 0; n < rivi1.length(); n++) {
+            for (int n = 0; n < kartankoko; n++) {
                 String rivi = syöttötiedosto.nextLine();
                 for (int i = 0; i < rivi.length(); i++) {
                     kartta[n][i] = rivi.charAt(i);
                 }
             }
         }
-        syöttötiedosto.close(); // Huom.!!
-        syöttötiedosto2.close();
+        syöttötiedosto.close();
     }
 
     public void tulostakartta(char[][] kartta) throws FileNotFoundException {
@@ -65,6 +62,9 @@ public class Kartta {
                 if (arvokartta[n][i] < 2) {
                     reittikartta[n][i] = 'o';
                 }
+                if (arvokartta[n][i] == 0) {
+                    reittikartta[n][i] = 'A';
+                }
             }
         }
     }
@@ -81,7 +81,7 @@ public class Kartta {
     }
 
     public int[][] arvotakartta(char[][] kartta) {
-
+        
         int[][] arvokartta = new int[kartankoko][kartankoko];
         for (int n = 0; n < kartankoko; n++) {
             for (int i = 0; i < kartankoko; i++) {
@@ -89,6 +89,12 @@ public class Kartta {
                     arvokartta[n][i] = 10000;
                 } else {
                     arvokartta[n][i] = 1;
+                }
+                if(kartta[n][i] == 'A'){
+                    arvokartta[n][i] = 0;
+                }
+                if(kartta[n][i] == 'L'){
+                    arvokartta[n][i] = -1;
                 }
             }
         }
