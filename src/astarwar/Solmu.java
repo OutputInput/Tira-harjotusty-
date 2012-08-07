@@ -10,4 +10,10 @@ package astarwar;
  */
 public class Solmu {
     
+    
+    int x; 
+    int y; 
+    Solmu vanhempi;
+    int arvioituetäisyys; //H 
+    
 }
