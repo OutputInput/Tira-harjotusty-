@@ -24,6 +24,6 @@ public class Astarwar {
 
         kartta.tulostakartta(kartta.kartta);
         kartta.tulostakartta(kartta.reittikartta);
-        System.out.println(A.arvioituetäisyys());
+        
     }
 }
