@@ -18,12 +18,14 @@ public class Astarwar {
     public static void main(String[] args) throws FileNotFoundException {
 
         Kartta kartta = new Kartta();
-        Astar A = new Astar(kartta);
         kartta.luetiedostotaulukkoon();
+        kartta.arvotakartta(kartta.kartta);
+        Astar A = new Astar(kartta);
         kartta.arvotareitti(kartta.kartta);
-
         kartta.tulostakartta(kartta.kartta);
         kartta.tulostakartta(kartta.reittikartta);
-                
+        A.päivitänaapurit(A.alkusolmu);
+        System.out.println(A.arvioitumatkamaaliin(A.alkusolmu.x, A.alkusolmu.y));
+
     }
 }
