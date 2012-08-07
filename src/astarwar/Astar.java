@@ -12,10 +12,11 @@ public class Astar {
 
     Kartta kartta;
     int[] käydyt;
-    int[] viereiset;
+
 
     public Astar(Kartta kartta) {
         this.kartta = kartta;
+        
     }
 
     public int arvioitumatkamaaliin(int x, int y) {
@@ -30,15 +31,21 @@ public class Astar {
 
     public int matkatähänasti() {
         //G
+        // kulje "vanhempi" solmujen kautta ja mittaa matka
         return 4;
     }
 
-    public void viereiset() {
+    public void päivitänaapurit() {
     }
 
     public int F(int x, int y) {
         //F = G + H
         int F = arvioitumatkamaaliin(x, y) + matkatähänasti();
         return F;
+    } 
+   
+    public void lähinnaapuri(){
+        
     }
+    
 }
