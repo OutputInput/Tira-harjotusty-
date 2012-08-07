@@ -18,7 +18,7 @@ public class Kartta {
     int kartankoko = 10;
     char[][] kartta = new char[kartankoko][kartankoko];
     char[][] reittikartta = new char[kartankoko][kartankoko];
-    int alkupistey;
+    public int alkupistey;
     int alkupistex;
     int loppupistey;
     int loppupistex;
@@ -112,17 +112,20 @@ public class Kartta {
         return arvokartta;
     }
 
-    public int arvioituetäisyys() {
-
-        int pistex = alkupistex - loppupistex;
-        int pistey = alkupistey - loppupistey;
-
-        int summa = (int) Math.pow(pistex, 2);
-        summa = summa + (int) Math.pow(pistey, 2);
-
-        int arvioituetäisyys = (int) Math.sqrt(summa);
-
-        return arvioituetäisyys;
+    public boolean onkoseinä(int x, int y) {
+        char alkio = kartta[x][y];
+        if (alkio == '#') {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean onkomaali(int x, int y) {
+        char alkio = kartta[x][y];
+        if (alkio == 'L') {
+            return true;
+        }
+        return false;
     }
 
     public int annaalkupistey() {
