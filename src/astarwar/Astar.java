@@ -5,6 +5,8 @@
 package astarwar;
 
 import java.util.PriorityQueue;
+import java.util.*;
+import java.io.*;
 
 /**
  *
@@ -23,7 +25,7 @@ public class Astar {
         int alkupistex = kartta.alkupistex;
         int alkupistey = kartta.alkupistey;
         int matka = this.arvioitumatkamaaliin(alkupistex, alkupistey);
-      
+
         alkusolmu = new Solmu(kartta.alkupistex, kartta.alkupistey, null, arvioitumatkamaaliin(alkupistex, alkupistey));
     }
 
@@ -71,6 +73,12 @@ public class Astar {
 
         x = tämänhetkinensolmu.x;
         y = tämänhetkinensolmu.y + 1;
+        System.out.println(x);
+        System.out.println(y);
+        char mato = kartta.kartta[2][4];
+        System.out.println(mato);
+        mato = kartta.kartta[4][2];
+        System.out.println(mato);
         vanhempi = tämänhetkinensolmu.vanhempi;
         etäisyys = tämänhetkinensolmu.arvioituetäisyys;
         if (!kartta.onkoseinä(x, y)) {
