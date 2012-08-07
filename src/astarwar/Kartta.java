@@ -18,7 +18,7 @@ public class Kartta {
     int kartankoko = 10;
     char[][] kartta = new char[kartankoko][kartankoko];
     char[][] reittikartta = new char[kartankoko][kartankoko];
-    public int alkupistey;
+    int alkupistey;
     int alkupistex;
     int loppupistey;
     int loppupistex;
