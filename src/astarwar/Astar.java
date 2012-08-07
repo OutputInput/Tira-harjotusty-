@@ -20,6 +20,11 @@ public class Astar {
     public Astar(Kartta kartta) {
         this.kartta = kartta;
         this.solmujono = new PriorityQueue<Solmu>();
+        int alkupistex = kartta.alkupistex;
+        int alkupistey = kartta.alkupistey;
+        int matka = this.arvioitumatkamaaliin(alkupistex, alkupistey);
+      
+        alkusolmu = new Solmu(kartta.alkupistex, kartta.alkupistey, null, arvioitumatkamaaliin(alkupistex, alkupistey));
     }
 
     public int arvioitumatkamaaliin(int x, int y) {
@@ -87,6 +92,5 @@ public class Astar {
     public void lisäänaapurinaapureihin(int x, int y, Solmu vanhempi, int etäisyys) {
         Solmu S = new Solmu(x, y, vanhempi, etäisyys);
         solmujono.add(S);
-
     }
 }
