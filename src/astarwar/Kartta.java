@@ -120,6 +120,24 @@ public class Kartta {
         int summa = (int) Math.pow(pistex, 2);
         summa = summa + (int) Math.pow(pistey, 2);
 
-        return summa;
+        int arvioituetäisyys = (int) Math.sqrt(summa);
+
+        return arvioituetäisyys;
+    }
+
+    public int annaalkupistey() {
+        return this.alkupistey;
+    }
+
+    public int annaalkupistex() {
+        return this.alkupistex;
+    }
+
+    public int annaannaloppupistey() {
+        return this.loppupistey;
+    }
+
+    public int annaloppupistex() {
+        return this.loppupistex;
     }
 }
