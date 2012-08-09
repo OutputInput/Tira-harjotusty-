@@ -29,11 +29,8 @@ public class Astarwar {
         kartta.tulostakartta(kartta.kartta);
         kartta.tulostakartta(kartta.reittikartta);
         A.päivitänaapurit(A.alkusolmu);
-        System.out.println(A.arvioitumatkamaaliin(A.alkusolmu.x, A.alkusolmu.y));
-
+        System.out.println("arivoitu matka " + A.arvioitumatkamaaliin(A.alkusolmu.x, A.alkusolmu.y));
         System.out.println(A.solmujono.size());
-
-        System.out.println("wtf menee x ja y akselit sekasin");
 
     }
 }
