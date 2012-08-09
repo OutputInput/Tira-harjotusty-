@@ -88,22 +88,21 @@ public class Kartta {
     }
 
     public int[][] arvotakartta(char[][] kartta) {
-
         int[][] arvokartta = new int[kartankoko][kartankoko];
-        for (int y = 0; y < kartankoko; y++) {
-            for (int x = 0; x < kartankoko; x++) {
-                if (kartta[y][x] == '#') {
-                    arvokartta[y][x] = 10000;
+        for (int x = 0; x < kartankoko; x++) {
+            for (int y = 0; y < kartankoko; y++) {
+                if (kartta[x][y] == '#') {
+                    arvokartta[x][y] = 10000;
                 } else {
-                    arvokartta[y][x] = 1;
+                    arvokartta[x][y] = 1;
                 }
-                if (kartta[y][x] == 'A') {
-                    arvokartta[y][x] = 0;
+                if (kartta[x][y] == 'A') {
+                    arvokartta[x][y] = 0;
                     alkupistey = y;
                     alkupistex = x;
                 }
-                if (kartta[y][x] == 'L') {
-                    arvokartta[y][x] = -1;
+                if (kartta[x][y] == 'L') {
+                    arvokartta[x][y] = -1;
                     loppupistey = y;
                     loppupistex = x;
                 }
@@ -119,7 +118,7 @@ public class Kartta {
         }
         return false;
     }
-    
+
     public boolean onkomaali(int x, int y) {
         char alkio = kartta[x][y];
         if (alkio == 'L') {
