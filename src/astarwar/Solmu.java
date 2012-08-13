@@ -31,6 +31,13 @@ public class Solmu implements Comparable<Solmu> {
         this.arvioituetäisyys = solmu.arvioituetäisyys;
         this.matkatähänasti = 0;
     }
+    public Solmu() {
+        this.x = 0;
+        this.y = 0;
+        this.vanhempi = null;
+        this.arvioituetäisyys = 0;
+        this.matkatähänasti = 0;
+    }
 
     public Solmu annavanhempi() {
         return this.vanhempi;
