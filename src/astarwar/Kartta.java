@@ -22,6 +22,7 @@ public class Kartta {
     int alkupistex;
     int loppupistey;
     int loppupistex;
+    Solmu maalisolmu = new Solmu(-1, -1, null, -1);
 
     public void luetiedostotaulukkoon() throws FileNotFoundException {
 
@@ -71,6 +72,8 @@ public class Kartta {
                 }
                 if (arvokartta[n][i] == -1) {
                     reittikartta[n][i] = 'L';
+                    maalisolmu.x = n;
+                    maalisolmu.y = i;
                 }
             }
         }
@@ -105,7 +108,7 @@ public class Kartta {
                         reittikarttatiedosto.write(reittikartta[n][i]);
                     }
                 }
-                    reittikarttatiedosto.newLine();
+                reittikarttatiedosto.newLine();
             }
         }
         reittikarttatiedosto.close();
