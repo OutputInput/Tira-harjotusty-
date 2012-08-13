@@ -13,14 +13,20 @@ public class Solmu implements Comparable<Solmu> {
     int x = 0;
     int y = 0;
     Solmu vanhempi;
-    int arvioituetäisyys; //H 
+    double arvioituetäisyys; //H 
 
-
-    public Solmu(int x, int y, Solmu vanhempi, int arvioituetäisyys) {
+    public Solmu(int x, int y, Solmu vanhempi, double arvioituetäisyys) {
         this.x = x;
         this.y = y;
         this.vanhempi = vanhempi;
         this.arvioituetäisyys = arvioituetäisyys;
+    }
+
+    public Solmu(Solmu solmu) {
+        this.x = solmu.x;
+        this.y = solmu.y;
+        this.vanhempi = solmu.vanhempi;
+        this.arvioituetäisyys = solmu.arvioituetäisyys;
     }
 
     public Solmu annavanhempi() {
@@ -30,7 +36,7 @@ public class Solmu implements Comparable<Solmu> {
     @Override
     public int compareTo(Solmu s) {
         if (this.arvioituetäisyys == s.arvioituetäisyys) {
-        return 0;
+            return 0;
         } else if (this.arvioituetäisyys > s.arvioituetäisyys) {
             return 1;
         } else {
