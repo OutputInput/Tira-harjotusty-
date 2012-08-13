@@ -15,13 +15,14 @@ import java.io.*;
 public class Astar {
 
     Kartta kartta;
-    int[] käydyt;
     Solmu alkusolmu;
     PriorityQueue<Solmu> solmujono;
+    PriorityQueue<Solmu> käydytsolmut;
 
     public Astar(Kartta kartta) {
         this.kartta = kartta;
         this.solmujono = new PriorityQueue<Solmu>();
+        this.käydytsolmut = new PriorityQueue<Solmu>();
         int alkupistex = kartta.alkupistex;
         int alkupistey = kartta.alkupistey;
         int matka = this.arvioitumatkamaaliin(alkupistex, alkupistey);
@@ -41,44 +42,59 @@ public class Astar {
     public int matkatähänasti() {
         //G
         // kulje "vanhempi" solmujen kautta ja mittaa matka
-        return 4;
+        Solmu jee = new Solmu(0, 0, null, 0);
+        for (int i = 0; i < käydytsolmut.size(); i++) {
+            käydytsolmut.poll();
+            jee = solmujono.poll();
+            System.out.println("x " + jee.x + "y " + jee.y);
+
+        }
+
+        jee = solmujono.poll();
+        return 444;
     }
 
     public void päivitänaapurit(Solmu tämänhetkinensolmu) {
 
-        int x = tämänhetkinensolmu.x + 1;
-        int y = tämänhetkinensolmu.y;
-        Solmu vanhempi = tämänhetkinensolmu.vanhempi;
-        int etäisyys = tämänhetkinensolmu.arvioituetäisyys;
-        if (!kartta.onkoseinä(x, y)) {
-            lisäänaapurinaapureihin(x, y, vanhempi, etäisyys);
+
+        Solmu solmu = new Solmu(tämänhetkinensolmu);
+
+        //oikeanaapuri
+        solmu.x++;
+        solmu.arvioituetäisyys = arvioitumatkamaaliin(solmu.x, solmu.y);
+        if (!kartta.onkoseinä(solmu.x, solmu.y) && !käydytsolmut.contains(solmu)) {
+            lisäänaapurinaapureihin(solmu);
         }
 
-        x = tämänhetkinensolmu.x - 1;
-        y = tämänhetkinensolmu.y;
-        vanhempi = tämänhetkinensolmu.vanhempi;
-        etäisyys = tämänhetkinensolmu.arvioituetäisyys;
-        if (!kartta.onkoseinä(x, y)) {
-            lisäänaapurinaapureihin(x, y, vanhempi, etäisyys);
+        solmu.x++;
+        solmu.arvioituetäisyys = arvioitumatkamaaliin(solmu.x, solmu.y);
+        if (!kartta.onkoseinä(solmu.x, solmu.y) && !käydytsolmut.contains(solmu)) {
+            lisäänaapurinaapureihin(solmu);
         }
 
-        x = tämänhetkinensolmu.x;
-        y = tämänhetkinensolmu.y - 1;
-        vanhempi = tämänhetkinensolmu.vanhempi;
-        etäisyys = tämänhetkinensolmu.arvioituetäisyys;
-        if (!kartta.onkoseinä(x, y)) {
-            lisäänaapurinaapureihin(x, y, vanhempi, etäisyys);
+        //vasen naapuri
+        solmu = tämänhetkinensolmu;
+        solmu.x--;
+        solmu.arvioituetäisyys = arvioitumatkamaaliin(solmu.x, solmu.y);
+        if (!kartta.onkoseinä(solmu.x, solmu.y)) {
+            lisäänaapurinaapureihin(solmu);
         }
 
-        x = tämänhetkinensolmu.x;
-        y = tämänhetkinensolmu.y + 1;
-        vanhempi = tämänhetkinensolmu.vanhempi;
-        etäisyys = tämänhetkinensolmu.arvioituetäisyys;
-        if (!kartta.onkoseinä(x, y)) {
-            lisäänaapurinaapureihin(x, y, vanhempi, etäisyys);
+        //alanaapuri
+        solmu = tämänhetkinensolmu;
+        solmu.y++;
+        solmu.arvioituetäisyys = arvioitumatkamaaliin(solmu.x, solmu.y);
+        if (!kartta.onkoseinä(solmu.x, solmu.y)) {
+            lisäänaapurinaapureihin(solmu);
         }
 
-
+        //ylänaapuri
+        solmu = tämänhetkinensolmu;
+        solmu.y--;
+        solmu.arvioituetäisyys = arvioitumatkamaaliin(solmu.x, solmu.y);
+        if (!kartta.onkoseinä(solmu.x, solmu.y)) {
+            lisäänaapurinaapureihin(solmu);
+        }
     }
 
     public int F(int x, int y) {
@@ -87,11 +103,32 @@ public class Astar {
         return F;
     }
 
-    public void lähinnaapuri() {
+    public boolean onkootettujo(int x, int y) {
+
+        for (int n = 0; n < solmujono.size(); n++) {
+            solmujono.equals(n);
+        }
+
+
+        return true;
     }
 
-    public void lisäänaapurinaapureihin(int x, int y, Solmu vanhempi, int etäisyys) {
-        Solmu S = new Solmu(x, y, vanhempi, etäisyys);
-        solmujono.add(S);
+    public Solmu parasvaihtoehto(PriorityQueue<Solmu> solmujono) {
+        return solmujono.peek();
+    }
+
+    public void lisäänaapurinaapureihin(Solmu solmu) {
+        solmujono.add(solmu);
+    }
+
+    public void käysolmu() {
+        käydytsolmut.add(solmujono.poll());
+    }
+
+    public void kuljereitti() {
+        //päivitä naapurit (päivitä sellaset mitä ei ole aikasemmin päivitetty)
+        //valitse paras
+        //etene
+        //päivitä naapurit (päivitä sellaset mitä ei ole aikasemmin päivitetty)
     }
 }
