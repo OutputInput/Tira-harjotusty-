@@ -87,6 +87,30 @@ public class Kartta {
         return kartta2;
     }
 
+    public void piirräreitti(PriorityQueue<Solmu> käydytsolmut) throws IOException {
+
+        String nimi = new String("uk");
+        BufferedWriter reittikarttatiedosto = new BufferedWriter(new FileWriter("uk"));
+        Solmu solmu = new Solmu(0, 0, null, 0);
+
+        while (!käydytsolmut.isEmpty()) {
+            solmu = käydytsolmut.poll();
+
+            for (int n = 0; n < kartankoko; n++) {
+                for (int i = 0; i < kartankoko; i++) {
+                    if (solmu.x == n && solmu.y == i) {
+                        reittikartta[n][i] = '-';
+                        reittikarttatiedosto.write("-");
+                    } else {
+                        reittikarttatiedosto.write(reittikartta[n][i]);
+                    }
+                }
+            }
+        }
+        reittikarttatiedosto.close();
+        tulostakartta(reittikartta);
+    }
+
     public int[][] arvotakartta(char[][] kartta) {
         int[][] arvokartta = new int[kartankoko][kartankoko];
         for (int x = 0; x < kartankoko; x++) {
