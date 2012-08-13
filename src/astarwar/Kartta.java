@@ -105,6 +105,7 @@ public class Kartta {
                         reittikarttatiedosto.write(reittikartta[n][i]);
                     }
                 }
+                    reittikarttatiedosto.newLine();
             }
         }
         reittikarttatiedosto.close();
