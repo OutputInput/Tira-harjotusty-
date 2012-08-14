@@ -102,10 +102,10 @@ public class Kartta {
             for (int n = 0; n < kartankoko; n++) {
                 for (int i = 0; i < kartankoko; i++) {
                     if (solmu.x == n && solmu.y == i) {
-                        reittikartta[n][i] = '-';
+                        reittikartta[i][n] = '-';
                         reittikarttatiedosto.write("-");
                     } else {
-                        reittikarttatiedosto.write(reittikartta[n][i]);
+                        reittikarttatiedosto.write(reittikartta[i][n]);
                     }
                 }
                 reittikarttatiedosto.newLine();
