@@ -19,8 +19,8 @@ public class Astar {
     Solmu tämänhetkinensolmu;
     PriorityQueue<Solmu> solmujono;
     PriorityQueue<Solmu> käydytsolmut;
-    HashMap<int[], Solmu> kaydyt = new HashMap();
-    HashMap<int[], Solmu> jono = new HashMap();
+    HashMap<Koordinaatti, Solmu> kaydyt = new HashMap();
+    HashMap<Koordinaatti, Solmu> jono = new HashMap();
 
     public Astar(Kartta kartta) {
         this.kartta = kartta;
@@ -28,18 +28,17 @@ public class Astar {
         this.käydytsolmut = new PriorityQueue<Solmu>();
         int alkupistex = kartta.alkupistex;
         int alkupistey = kartta.alkupistey;
-        int matka = this.arvioitumatkamaaliin(alkupistex, alkupistey);
         alkusolmu = new Solmu(kartta.alkupistex, kartta.alkupistey, null, arvioitumatkamaaliin(alkupistex, alkupistey));
         tämänhetkinensolmu = alkusolmu;
     }
 
-    public int arvioitumatkamaaliin(int x, int y) {
+    public double arvioitumatkamaaliin(int x, int y) {
         //H
         int pistex = x - kartta.loppupistex;
         int pistey = y - kartta.loppupistey;
-        int summa = (int) Math.pow(pistex, 2);
-        summa = summa + (int) Math.pow(pistey, 2);
-        int arvioituetäisyys = (int) Math.sqrt(summa);
+        double summa = Math.pow(pistex, 2);
+        summa = summa + Math.pow(pistey, 2);
+        double arvioituetäisyys = Math.sqrt(summa);
         return arvioituetäisyys;
     }
 
@@ -56,76 +55,71 @@ public class Astar {
     }
 
     public void päivitänaapurit() {
-
-        Solmu solmu = new Solmu(tämänhetkinensolmu);
+        //vasennaapuri
+        Solmu vasennaapuri = new Solmu(tämänhetkinensolmu);
+        vasennaapuri.x = (vasennaapuri.x - 1);
+        vasennaapuri.arvioituetäisyys = arvioitumatkamaaliin(vasennaapuri.x, vasennaapuri.y);
+        if (kelpaakolistaan(vasennaapuri)) {
+            lisäänaapurinaapureihin(vasennaapuri);
+        }
         //oikeanaapuri
-        solmu.x++;
-        solmu.arvioituetäisyys = arvioitumatkamaaliin(solmu.x, solmu.y);
-        int[] koordinaatit = new int[2];
-        koordinaatit[0] = solmu.x;
-        koordinaatit[1] = solmu.y;
-        if (!kartta.onkoseinä(solmu.x, solmu.y) && !kaydyt.containsKey(koordinaatit) && !onkolistassa(solmu)) {
-            Solmu naapuri = new Solmu(solmu.x, solmu.y, solmu, arvioitumatkamaaliin(solmu.x, solmu.y));
-            lisäänaapurinaapureihin(naapuri);
-        }
-        //vasen naapuri
-        solmu.x--;
-        solmu.x--;
-        koordinaatit[0] = solmu.x;
-        koordinaatit[1] = solmu.y;
-        solmu.arvioituetäisyys = arvioitumatkamaaliin(solmu.x, solmu.y);
-        if (!kartta.onkoseinä(solmu.x, solmu.y) && !kaydyt.containsKey(koordinaatit) && !onkolistassa(solmu)) {
-            Solmu naapuri = new Solmu(solmu.x, solmu.y, solmu, arvioitumatkamaaliin(solmu.x, solmu.y));
-            lisäänaapurinaapureihin(naapuri);
-        }
-        //alanaapuri
-        solmu.x++;
-        solmu.y++;
-        koordinaatit[0] = solmu.x;
-        koordinaatit[1] = solmu.y;
-        solmu.arvioituetäisyys = arvioitumatkamaaliin(solmu.x, solmu.y);
-        if (!kartta.onkoseinä(solmu.x, solmu.y) && !kaydyt.containsKey(koordinaatit) && !onkolistassa(solmu)) {
-            Solmu naapuri = new Solmu(solmu.x, solmu.y, solmu, arvioitumatkamaaliin(solmu.x, solmu.y));
-            lisäänaapurinaapureihin(naapuri);
+        Solmu oikeanaapuri = new Solmu(tämänhetkinensolmu);
+        oikeanaapuri.x = (oikeanaapuri.x + 1);
+        oikeanaapuri.arvioituetäisyys = arvioitumatkamaaliin(oikeanaapuri.x, oikeanaapuri.y);
+        if (kelpaakolistaan(oikeanaapuri)) {
+            lisäänaapurinaapureihin(oikeanaapuri);
         }
         //ylänaapuri
-        solmu.y--;
-        solmu.y--;
-        koordinaatit[0] = solmu.x;
-        koordinaatit[1] = solmu.y;
-        solmu.arvioituetäisyys = arvioitumatkamaaliin(solmu.x, solmu.y);
-        if (!kartta.onkoseinä(solmu.x, solmu.y) && !kaydyt.containsKey(koordinaatit) && !onkolistassa(solmu)) {
-            Solmu naapuri = new Solmu(solmu.x, solmu.y, solmu, arvioitumatkamaaliin(solmu.x, solmu.y));
-            lisäänaapurinaapureihin(naapuri);
+        Solmu ylänaapuri = new Solmu(tämänhetkinensolmu);
+        ylänaapuri.y = (ylänaapuri.y - 1);
+        ylänaapuri.arvioituetäisyys = arvioitumatkamaaliin(ylänaapuri.x, ylänaapuri.y);
+        if (kelpaakolistaan(ylänaapuri)) {
+            lisäänaapurinaapureihin(ylänaapuri);
         }
+        //alanaapuri
+        Solmu alanaapuri = new Solmu(tämänhetkinensolmu);
+        alanaapuri.y = (alanaapuri.y + 1);
+        alanaapuri.arvioituetäisyys = arvioitumatkamaaliin(alanaapuri.x, alanaapuri.y);
+        if (kelpaakolistaan(alanaapuri)) {
+            lisäänaapurinaapureihin(alanaapuri);
+        }
+        System.out.println("");
     }
 
-    public int F(Solmu solmu) {
+    public double F(Solmu solmu) {
         //F = G + H
-        int F = arvioitumatkamaaliin(solmu.x, solmu.y) + matkatähänasti();
+        double F = arvioitumatkamaaliin(solmu.x, solmu.y) + matkatähänasti();
         return F;
     }
 
-    public Solmu parasvaihtoehto(PriorityQueue<Solmu> solmujono) {
-        return solmujono.poll();
-    }
-
-    public boolean onkolistassa(Solmu solmu) {
-        int[] koordinaatit = new int[2];
-        koordinaatit[0] = solmu.x;
-        koordinaatit[1] = solmu.y;
-        if (jono.containsKey(koordinaatit)) {
+    public boolean onseinä(Solmu solmu) {
+        if (kartta.onkoseinä(solmu.x, solmu.y)) {
             return true;
         }
         return false;
     }
 
+    public Solmu parasvaihtoehto() {
+        Solmu uusisolmu;
+        uusisolmu = this.solmujono.poll();
+
+        return uusisolmu;
+    }
+
+    public boolean onlistassa(Solmu solmu) {
+        Solmu r = jono.get(new Koordinaatti(solmu.x, solmu.y));
+        if (r == null) {
+            return false;
+        }
+        return true;
+    }
+
     public void solmujonoon(Solmu solmu) {
-        int[] koordinaatit = new int[2];
-        koordinaatit[0] = solmu.x;
-        koordinaatit[1] = solmu.y;
-        this.kaydyt.put(koordinaatit, solmu);
-        tämänhetkinensolmu = solmu;
+        Koordinaatti k = new Koordinaatti(solmu.x, solmu.y);
+        if (!this.jono.containsKey(k)) {
+            this.jono.put(k, solmu);
+        }
+
     }
 
     public void lisäänaapurinaapureihin(Solmu solmu) {
@@ -134,28 +128,60 @@ public class Astar {
     }
 
     public void käysolmu(Solmu solmu) {
-        int[] koordinaatit = new int[2];
-        koordinaatit[0] = solmu.x;
-        koordinaatit[1] = solmu.y;
-        this.kaydyt.put(koordinaatit, solmu);
+        Koordinaatti k = new Koordinaatti(solmu.x, solmu.y);
+        this.kaydyt.put(k, solmu);
         tämänhetkinensolmu = solmu;
+        this.jono.remove(k);
+
+        käydytsolmut.add(solmu);
+
+        System.out.println("kävin täällä " + solmu.x + " " + solmu.y + " arvioitumatka " + tämänhetkinensolmu.arvioituetäisyys);
+        System.out.println(jono);
+    }
+
+    public boolean onkokäyty(Solmu solmu) {
+        Solmu r = kaydyt.get(new Koordinaatti(solmu.x, solmu.y));
+        if (r == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean kelpaakolistaan(Solmu solmu) {
+        if (onlistassa(solmu)) {
+            return false;
+        }
+        if (onseinä(solmu)) {
+            return false;
+        }
+        if (onkokäyty(solmu)) {
+            return false;
+        }
+        return true;
     }
 
     public void kuljereitti() {
         //päivitä naapurit (päivitä sellaset mitä ei ole aikasemmin päivitetty)
 
         käysolmu(alkusolmu);
+
+
         do {
+
             päivitänaapurit();
-            Solmu paras = parasvaihtoehto(solmujono);
-            käysolmu(paras);
+            käysolmu(parasvaihtoehto());
+
+
             if (solmujono.size() > 100) {
                 tämänhetkinensolmu = kartta.maalisolmu;
             }
-            System.out.println("olemme tässä " + tämänhetkinensolmu.x + "  " + tämänhetkinensolmu.y);
 //            päivitänaapurit(tämänhetkinensolmu);
 //            käysolmu(parasvaihtoehto(solmujono));
             //päivitä naapurit (päivitä sellaset mitä ei ole aikasemmin päivitetty)
+            if (ollaankomaalissa(tämänhetkinensolmu)) {
+                System.out.println("maalissa");
+
+            }
         } while (!ollaankomaalissa(tämänhetkinensolmu));
     }
 

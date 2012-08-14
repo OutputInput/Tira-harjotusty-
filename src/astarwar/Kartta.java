@@ -72,8 +72,8 @@ public class Kartta {
                 }
                 if (arvokartta[n][i] == -1) {
                     reittikartta[n][i] = 'L';
-                    maalisolmu.x = n;
-                    maalisolmu.y = i;
+                    maalisolmu.x = i;
+                    maalisolmu.y = n;
                 }
             }
         }
@@ -119,18 +119,18 @@ public class Kartta {
         int[][] arvokartta = new int[kartankoko][kartankoko];
         for (int x = 0; x < kartankoko; x++) {
             for (int y = 0; y < kartankoko; y++) {
-                if (kartta[x][y] == '#') {
-                    arvokartta[x][y] = 10000;
+                if (kartta[y][x] == '#') {
+                    arvokartta[y][x] = 10000;
                 } else {
-                    arvokartta[x][y] = 1;
+                    arvokartta[y][x] = 1;
                 }
-                if (kartta[x][y] == 'A') {
-                    arvokartta[x][y] = 0;
+                if (kartta[y][x] == 'A') {
+                    arvokartta[y][x] = 0;
                     alkupistey = y;
                     alkupistex = x;
                 }
-                if (kartta[x][y] == 'L') {
-                    arvokartta[x][y] = -1;
+                if (kartta[y][x] == 'L') {
+                    arvokartta[y][x] = -1;
                     loppupistey = y;
                     loppupistex = x;
                 }
@@ -140,7 +140,7 @@ public class Kartta {
     }
 
     public boolean onkoseinä(int x, int y) {
-        char alkio = kartta[x][y];
+        char alkio = kartta[y][x];
         if (alkio == '#') {
             return true;
         }
@@ -148,7 +148,7 @@ public class Kartta {
     }
 
     public boolean onkomaali(int x, int y) {
-        char alkio = kartta[x][y];
+        char alkio = kartta[y][x];
         if (alkio == 'L') {
             return true;
         }

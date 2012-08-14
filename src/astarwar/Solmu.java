@@ -27,10 +27,11 @@ public class Solmu implements Comparable<Solmu> {
     public Solmu(Solmu solmu) {
         this.x = solmu.x;
         this.y = solmu.y;
-        this.vanhempi = solmu.vanhempi;
+        this.vanhempi = solmu;
         this.arvioituetäisyys = solmu.arvioituetäisyys;
         this.matkatähänasti = 0;
     }
+
     public Solmu() {
         this.x = 0;
         this.y = 0;
@@ -52,5 +53,10 @@ public class Solmu implements Comparable<Solmu> {
         } else {
             return -1;
         }
+    }
+
+    public String toString() {
+
+        return "solmu koordinaateissa x " + x + " y " + y;
     }
 }
