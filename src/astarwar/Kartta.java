@@ -70,7 +70,7 @@ public class Kartta {
                 if (arvokartta[n][i] == 0) {
                     reittikartta[n][i] = 'A';
                 }
-                if (arvokartta[n][i] == -1) {
+                if (arvokartta[n][i] == 4) {
                     reittikartta[n][i] = 'L';
                     maalisolmu.x = i;
                     maalisolmu.y = n;
@@ -130,7 +130,7 @@ public class Kartta {
                     alkupistex = x;
                 }
                 if (kartta[y][x] == 'L') {
-                    arvokartta[y][x] = -1;
+                    arvokartta[y][x] = 4;
                     loppupistey = y;
                     loppupistex = x;
                 }

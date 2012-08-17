@@ -8,6 +8,6 @@ package astarwar;
  *
  * @author pxkorpel
  */
-public class DIjkstra {
+public class Dijkstra {
     
 }

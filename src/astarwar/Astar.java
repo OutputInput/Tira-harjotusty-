@@ -58,32 +58,39 @@ public class Astar {
         //vasennaapuri
         Solmu vasennaapuri = new Solmu(tämänhetkinensolmu);
         vasennaapuri.x = (vasennaapuri.x - 1);
-        vasennaapuri.arvioituetäisyys = arvioitumatkamaaliin(vasennaapuri.x, vasennaapuri.y);
-        if (kelpaakolistaan(vasennaapuri)) {
-            lisäänaapurinaapureihin(vasennaapuri);
+        if (vasennaapuri.x >= 0) {
+            vasennaapuri.arvioituetäisyys = arvioitumatkamaaliin(vasennaapuri.x, vasennaapuri.y);
+            if (kelpaakolistaan(vasennaapuri)) {
+                lisäänaapurinaapureihin(vasennaapuri);
+            }
         }
         //oikeanaapuri
         Solmu oikeanaapuri = new Solmu(tämänhetkinensolmu);
         oikeanaapuri.x = (oikeanaapuri.x + 1);
-        oikeanaapuri.arvioituetäisyys = arvioitumatkamaaliin(oikeanaapuri.x, oikeanaapuri.y);
-        if (kelpaakolistaan(oikeanaapuri)) {
-            lisäänaapurinaapureihin(oikeanaapuri);
+        if (oikeanaapuri.x <= kartta.kartankoko - 1) {
+            oikeanaapuri.arvioituetäisyys = arvioitumatkamaaliin(oikeanaapuri.x, oikeanaapuri.y);
+            if (kelpaakolistaan(oikeanaapuri)) {
+                lisäänaapurinaapureihin(oikeanaapuri);
+            }
         }
         //ylänaapuri
         Solmu ylänaapuri = new Solmu(tämänhetkinensolmu);
         ylänaapuri.y = (ylänaapuri.y - 1);
-        ylänaapuri.arvioituetäisyys = arvioitumatkamaaliin(ylänaapuri.x, ylänaapuri.y);
-        if (kelpaakolistaan(ylänaapuri)) {
-            lisäänaapurinaapureihin(ylänaapuri);
+        if (ylänaapuri.y >= 0) {
+            ylänaapuri.arvioituetäisyys = arvioitumatkamaaliin(ylänaapuri.x, ylänaapuri.y);
+            if (kelpaakolistaan(ylänaapuri)) {
+                lisäänaapurinaapureihin(ylänaapuri);
+            }
         }
         //alanaapuri
         Solmu alanaapuri = new Solmu(tämänhetkinensolmu);
         alanaapuri.y = (alanaapuri.y + 1);
-        alanaapuri.arvioituetäisyys = arvioitumatkamaaliin(alanaapuri.x, alanaapuri.y);
-        if (kelpaakolistaan(alanaapuri)) {
-            lisäänaapurinaapureihin(alanaapuri);
+        if (alanaapuri.y <= kartta.kartankoko - 1) {
+            alanaapuri.arvioituetäisyys = arvioitumatkamaaliin(alanaapuri.x, alanaapuri.y);
+            if (kelpaakolistaan(alanaapuri)) {
+                lisäänaapurinaapureihin(alanaapuri);
+            }
         }
-        System.out.println("");
     }
 
     public double F(Solmu solmu) {
@@ -132,11 +139,9 @@ public class Astar {
         this.kaydyt.put(k, solmu);
         tämänhetkinensolmu = solmu;
         this.jono.remove(k);
-
         käydytsolmut.add(solmu);
 
         System.out.println("kävin täällä " + solmu.x + " " + solmu.y + " arvioitumatka " + tämänhetkinensolmu.arvioituetäisyys);
-        System.out.println(jono);
     }
 
     public boolean onkokäyty(Solmu solmu) {
@@ -161,26 +166,15 @@ public class Astar {
     }
 
     public void kuljereitti() {
-        //päivitä naapurit (päivitä sellaset mitä ei ole aikasemmin päivitetty)
-
         käysolmu(alkusolmu);
-
-
         do {
-
             päivitänaapurit();
             käysolmu(parasvaihtoehto());
-
-
             if (solmujono.size() > 100) {
                 tämänhetkinensolmu = kartta.maalisolmu;
             }
-//            päivitänaapurit(tämänhetkinensolmu);
-//            käysolmu(parasvaihtoehto(solmujono));
-            //päivitä naapurit (päivitä sellaset mitä ei ole aikasemmin päivitetty)
             if (ollaankomaalissa(tämänhetkinensolmu)) {
                 System.out.println("maalissa");
-
             }
         } while (!ollaankomaalissa(tämänhetkinensolmu));
     }

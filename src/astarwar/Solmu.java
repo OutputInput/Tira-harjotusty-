@@ -15,6 +15,7 @@ public class Solmu implements Comparable<Solmu> {
     Solmu vanhempi;
     double arvioituetäisyys; //H 
     int matkatähänasti;
+    int matka;
 
     public Solmu(int x, int y, Solmu vanhempi, double arvioituetäisyys) {
         this.x = x;
@@ -58,5 +59,9 @@ public class Solmu implements Comparable<Solmu> {
     public String toString() {
 
         return "solmu koordinaateissa x " + x + " y " + y;
+    }
+
+    public void summaamatkat(int matka) {
+        this.matka = matka + vanhempi.matka;
     }
 }
