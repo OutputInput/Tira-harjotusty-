@@ -68,7 +68,8 @@ public class Solmu implements Comparable<Solmu> {
         return "solmu koordinaateissa x " + x + " y " + y;
     }
 
-    public void summaamatkat() {
+    public int summaamatkat() {
         this.matkatähänasti = vanhempi.matkatähänasti;
+        return 4;
     }
 }
