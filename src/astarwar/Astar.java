@@ -45,13 +45,8 @@ public class Astar {
     public int matkatähänasti() {
         //G
         // kulje "vanhempi" solmujen kautta ja mittaa matka
-        PriorityQueue<Solmu> apujono = käydytsolmut;
-        Solmu jee = new Solmu(0, 0, null, 0);
-        for (int i = 0; i < apujono.size(); i++) {
-            apujono.poll();
-            jee = apujono.poll();
-        }
-        return apujono.size();
+        //Täällä riittää että kattoo monta käyty jo koska etäisyys on 1
+        return kaydyt.size();
     }
 
     public void päivitänaapurit() {
@@ -61,7 +56,9 @@ public class Astar {
         if (vasennaapuri.x >= 0) {
             vasennaapuri.arvioituetäisyys = arvioitumatkamaaliin(vasennaapuri.x, vasennaapuri.y);
             if (kelpaakolistaan(vasennaapuri)) {
+                asetasolmulleF(vasennaapuri);
                 lisäänaapurinaapureihin(vasennaapuri);
+
             }
         }
         //oikeanaapuri
@@ -70,7 +67,9 @@ public class Astar {
         if (oikeanaapuri.x <= kartta.kartankoko - 1) {
             oikeanaapuri.arvioituetäisyys = arvioitumatkamaaliin(oikeanaapuri.x, oikeanaapuri.y);
             if (kelpaakolistaan(oikeanaapuri)) {
+                asetasolmulleF(oikeanaapuri);
                 lisäänaapurinaapureihin(oikeanaapuri);
+
             }
         }
         //ylänaapuri
@@ -79,7 +78,9 @@ public class Astar {
         if (ylänaapuri.y >= 0) {
             ylänaapuri.arvioituetäisyys = arvioitumatkamaaliin(ylänaapuri.x, ylänaapuri.y);
             if (kelpaakolistaan(ylänaapuri)) {
+                asetasolmulleF(ylänaapuri);
                 lisäänaapurinaapureihin(ylänaapuri);
+
             }
         }
         //alanaapuri
@@ -88,15 +89,19 @@ public class Astar {
         if (alanaapuri.y <= kartta.kartankoko - 1) {
             alanaapuri.arvioituetäisyys = arvioitumatkamaaliin(alanaapuri.x, alanaapuri.y);
             if (kelpaakolistaan(alanaapuri)) {
+                asetasolmulleF(alanaapuri);
                 lisäänaapurinaapureihin(alanaapuri);
+
             }
         }
     }
 
-    public double F(Solmu solmu) {
+    public void asetasolmulleF(Solmu solmu) {
         //F = G + H
+        //laske F arvo ja aseta se solmuille
         double F = arvioitumatkamaaliin(solmu.x, solmu.y) + matkatähänasti();
-        return F;
+        solmu.F = F;
+        System.out.println("F " + F);
     }
 
     public boolean onseinä(Solmu solmu) {
@@ -107,9 +112,9 @@ public class Astar {
     }
 
     public Solmu parasvaihtoehto() {
+        //käytä täällä F:ää => matkatähänasti toimimaan
         Solmu uusisolmu;
         uusisolmu = this.solmujono.poll();
-
         return uusisolmu;
     }
 
@@ -132,6 +137,7 @@ public class Astar {
     public void lisäänaapurinaapureihin(Solmu solmu) {
         solmujono.add(solmu);
         solmujonoon(solmu);
+        kartta.arvotasolmu(solmu);
     }
 
     public void käysolmu(Solmu solmu) {
@@ -140,8 +146,7 @@ public class Astar {
         tämänhetkinensolmu = solmu;
         this.jono.remove(k);
         käydytsolmut.add(solmu);
-
-        System.out.println("kävin täällä " + solmu.x + " " + solmu.y + " arvioitumatka " + tämänhetkinensolmu.arvioituetäisyys);
+        System.out.println("kävin täällä " + solmu.x + " " + solmu.y + " arvioitumatka " + tämänhetkinensolmu.arvioituetäisyys + "F arvo " + solmu.F);
     }
 
     public boolean onkokäyty(Solmu solmu) {
