@@ -4,6 +4,7 @@
  */
 package astarwar;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
@@ -31,24 +32,14 @@ public class Dijkstra {
         tämänhetkinensolmu = alkusolmu;
     }
 
-    public int matkatähänasti() {
-        //G
-        // kulje "vanhempi" solmujen kautta ja mittaa matka 
-        return tämänhetkinensolmu.summaamatkat(0, tämänhetkinensolmu);
-    }
-
-    public void päivitänaapurienreitit() {
+    public Solmu päivitänaapurienetäisyydetjapalautalähin() {
+        Solmu uusi = new Solmu();
         //vasennaapuri
         Solmu vasennaapuri = new Solmu(tämänhetkinensolmu);
         vasennaapuri.x = (vasennaapuri.x - 1);
         if (vasennaapuri.x >= 0) {
             if (onkoseinätaikäyty(vasennaapuri)) {
-                // ei lisätä naapureihin vaan päivitetään vanhemmat mikäli reittitähänasti 
-                //on lyhyempi
                 päivitäomaarvo(vasennaapuri);
-                vertaareittejä(vasennaapuri);
-                //metodi joka laittaa uuden vanhemman mikäli vertaareittejä antaa
-                //lyhyemmän reitin
             }
         }
         //oikeanaapuri
@@ -57,7 +48,6 @@ public class Dijkstra {
         if (oikeanaapuri.x <= kartta.kartankoko - 1) {
             if (onkoseinätaikäyty(oikeanaapuri)) {
                 päivitäomaarvo(oikeanaapuri);
-                vertaareittejä(oikeanaapuri);
             }
         }
         //ylänaapuri
@@ -78,6 +68,27 @@ public class Dijkstra {
                 vertaareittejä(alanaapuri);
             }
         }
+        return palautalähinnaapuri(vasennaapuri, oikeanaapuri, ylänaapuri, alanaapuri);
+    }
+
+    public Solmu palautalähinnaapuri(Solmu vasen, Solmu oikea, Solmu ylä, Solmu ala) {
+
+        int[] lähin = new int[]{vasen.omaarvo, oikea.omaarvo, ylä.omaarvo, ala.omaarvo};
+        Arrays.sort(lähin);
+
+        if (lähin[0] == vasen.omaarvo) {
+            return vasen;
+        }
+        if (lähin[0] == oikea.omaarvo) {
+            return oikea;
+        }
+        if (lähin[0] == ala.omaarvo) {
+            return ala;
+        }
+        if (lähin[0] == ylä.omaarvo) {
+            return ylä;
+        }
+        return vasen;
     }
 
     public boolean onseinä(Solmu solmu) {
@@ -93,20 +104,21 @@ public class Dijkstra {
         return uusisolmu;
     }
 
-    public void vertaareittejä(Solmu solmu) {
+    public Solmu vertaareittejä(Solmu solmu) {
         //vertaa vanhempienmäärä arvoa ja sitä mikä tulisi tämänhetkisen solmun kautta
         //arvoksi ja laita pienempi
         päivitämatkanykyisestäsolmusta(solmu);//päivitä reitti tämänhetkisestä solmusta ko. solmuun            
-
         if (solmu.matkatähänasti < solmu.matkatähänasti + kartta.arvokartta[solmu.y][solmu.x]) {
         }
+        return solmu;//palauttaa lähimmänsolmun viereisistä
     }
 
     public int annaetäisyys(Solmu solmu, Solmu vierussolmu) {
         //tänne vertailu solmujen etäisyyksistä 
         //eli 1 ja 6 vierekkäin niin etäisyys on 5, muista ottaa itseisarvo
-        //lisää kaikkiin +1 ettei tule nollanarvoisia solmuja
-        int etäisyys = Math.abs(haesolmunarvo(solmu) - haesolmunarvo(vierussolmu));
+        //lisää kaikkiin +1 ettei tule nollanarvoisia solmuja !!! ei oikeastaan voi lisätä +1 koska vääristää riippuen kuinka 
+        //monen solmun kautta kulkee
+        int etäisyys = Math.abs(haesolmunarvo(solmu) - haesolmunarvo(vierussolmu)) + 1;
         return etäisyys;
     }
 
@@ -118,8 +130,10 @@ public class Dijkstra {
         solmu.etäisyysvanhemmasta = annaetäisyys(solmu, solmu.vanhempi);
     }
 
-    public void päivitäreittitähänasti(Solmu solmu) {
+    public int laskereitinpituus(Solmu solmu, int matka) {
         //käy kaikki vanhemmat läpi ja niiden väliset etäisyydet ja summaa ne
+        matka = laskereitinpituus(solmu.vanhempi, matka) + solmu.etäisyysvanhemmasta;
+        return matka;
     }
 
     public void päivitäomaarvo(Solmu solmu) {
@@ -133,7 +147,7 @@ public class Dijkstra {
     }
 
     public void päivitämatkanykyisestäsolmusta(Solmu solmu) {
-        solmu.matkatähänasti = tämänhetkinensolmu.matkatähänasti + kartta.arvokartta[solmu.y][solmu.x];
+        solmu.matkatähänasti = tämänhetkinensolmu.matkatähänasti + annaetäisyys(solmu, tämänhetkinensolmu);
     }
 
     public void käysolmu(Solmu solmu) {
@@ -145,19 +159,8 @@ public class Dijkstra {
         System.out.println("kävin täällä " + solmu.x + " " + solmu.y + " arvioitumatka " + tämänhetkinensolmu.arvioituetäisyys);
     }
 
-    public boolean onkokäyty(Solmu solmu) {
-        Solmu r = kaydyt.get(new Koordinaatti(solmu.x, solmu.y));
-        if (r == null) {
-            return false;
-        }
-        return true;
-    }
-
     public boolean onkoseinätaikäyty(Solmu solmu) {
         if (onseinä(solmu)) {
-            return false;
-        }
-        if (onkokäyty(solmu)) {
             return false;
         }
         return true;
@@ -166,14 +169,13 @@ public class Dijkstra {
     public void kuljereitti() {
         käysolmu(alkusolmu);
         do {
-            päivitänaapurienreitit();
-            käysolmu(parasvaihtoehto());
-            if (solmujono.size() > 100) {
-                tämänhetkinensolmu = kartta.maalisolmu;
-            }
-            if (ollaankomaalissa(tämänhetkinensolmu)) {
-                System.out.println("maalissa");
-            }
+            //päivitä naapurit 
+            //=> vertaa tähänastista matkaa + etäisyyttä seuraavaan , 
+            // seuraavassa olevan etäisyyden kanssa JOS on annettu etäisyys
+            //valitse lähin paitsi jos on jo valittu 
+            //päivitä naapurit
+            asetatämänhetkiseksisolmuksi(päivitänaapurienetäisyydetjapalautalähin());//palauttaa solmun johon lyhin reitti
+
         } while (!ollaankomaalissa(tämänhetkinensolmu));
     }
 
@@ -182,5 +184,9 @@ public class Dijkstra {
             return true;
         }
         return false;
+    }
+
+    private void asetatämänhetkiseksisolmuksi(Solmu solmu) {
+        tämänhetkinensolmu = solmu;
     }
 }
