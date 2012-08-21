@@ -14,20 +14,23 @@ public class Solmu implements Comparable<Solmu> {
     int y = 0;
     Solmu vanhempi;
     double arvioituetäisyys; //H 
-    int matkatähänasti;
-    int etäisyysmuista;
+    int vanhempienmäärä;
+    int etäisyysvanhemmasta;
     double F;
     boolean onkoalkusolmu;
+    int matkatähänasti;
+    int omaarvo;
 
     public Solmu(int x, int y, Solmu vanhempi, double arvioituetäisyys) {
         this.x = x;
         this.y = y;
         this.vanhempi = vanhempi;
         this.arvioituetäisyys = arvioituetäisyys;
-        this.matkatähänasti = 0;
-        this.etäisyysmuista = 0;
+        this.vanhempienmäärä = 0;
+        this.etäisyysvanhemmasta = 0;
         this.F = 0;
         onkoalkusolmu = false;
+        this.omaarvo = 0;
     }
 
     public Solmu(Solmu solmu) {
@@ -35,10 +38,12 @@ public class Solmu implements Comparable<Solmu> {
         this.y = solmu.y;
         this.vanhempi = solmu;
         this.arvioituetäisyys = solmu.arvioituetäisyys;
-        this.matkatähänasti = 0;
-        this.etäisyysmuista = 0;
+        this.vanhempienmäärä = 0;
+        this.etäisyysvanhemmasta = 0;
         this.F = 0;
         onkoalkusolmu = false;
+        this.matkatähänasti = 0;
+        this.omaarvo = 0;
     }
 
     public Solmu() {
@@ -46,10 +51,11 @@ public class Solmu implements Comparable<Solmu> {
         this.y = 0;
         this.vanhempi = null;
         this.arvioituetäisyys = 0;
-        this.matkatähänasti = 0;
-        this.etäisyysmuista = 0;
+        this.vanhempienmäärä = 0;
+        this.etäisyysvanhemmasta = 0;
         this.F = 0;
         onkoalkusolmu = false;
+        this.omaarvo = 0;
     }
 
     public Solmu annavanhempi() {
@@ -74,18 +80,16 @@ public class Solmu implements Comparable<Solmu> {
     public int summaamatkat(int montavanhempaa, Solmu vanhempi) {
         do {
             if (onkoalkusolmu) {
-                matkatähänasti = montavanhempaa;
+                vanhempienmäärä = montavanhempaa;
                 return montavanhempaa;
             }
             if (vanhempi.onkoalkusolmu) {
-                matkatähänasti = montavanhempaa;
+                vanhempienmäärä = montavanhempaa;
                 return montavanhempaa;
             }
             montavanhempaa = summaamatkat(montavanhempaa, vanhempi.annavanhempi()) + 1;
         } while (vanhempi == null);
-        matkatähänasti = montavanhempaa;
+        vanhempienmäärä = montavanhempaa;
         return montavanhempaa;
     }
-    
-    
 }

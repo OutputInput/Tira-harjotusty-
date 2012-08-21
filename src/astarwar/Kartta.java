@@ -200,6 +200,6 @@ public class Kartta {
     }
 
     public void arvotasolmu(Solmu solmu) {
-        solmu.etäisyysmuista = arvokartta[solmu.y][solmu.x];
+        solmu.etäisyysvanhemmasta = arvokartta[solmu.y][solmu.x];
     }
 }

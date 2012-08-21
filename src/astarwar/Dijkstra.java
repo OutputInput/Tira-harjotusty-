@@ -12,7 +12,7 @@ import java.util.PriorityQueue;
  * @author pxkorpel
  */
 public class Dijkstra {
-    
+
     Kartta kartta;
     Solmu alkusolmu;
     Solmu tämänhetkinensolmu;
@@ -27,26 +27,14 @@ public class Dijkstra {
         this.käydytsolmut = new PriorityQueue<Solmu>();
         int alkupistex = kartta.alkupistex;
         int alkupistey = kartta.alkupistey;
-        alkusolmu = new Solmu(kartta.alkupistex, kartta.alkupistey, null, arvioitumatkamaaliin(alkupistex, alkupistey));
+        alkusolmu = new Solmu(kartta.alkupistex, kartta.alkupistey, null, 0);
         tämänhetkinensolmu = alkusolmu;
-    }
-    
-     public double arvioitumatkamaaliin(int x, int y) {
-        //H
-        int pistex = x - kartta.loppupistex;
-        int pistey = y - kartta.loppupistey;
-        double summa = Math.pow(pistex, 2);
-        summa = summa + Math.pow(pistey, 2);
-        double arvioituetäisyys = Math.sqrt(summa);
-        return arvioituetäisyys;
     }
 
     public int matkatähänasti() {
-        // kulje "vanhempi" solmujen kautta ja mittaa matka
-        HashMap<Koordinaatti, Solmu> apujono = new HashMap();
-        for (int i = 0; i < apujono.size(); i++) {  
-        }
-        return kaydyt.size();
+        //G
+        // kulje "vanhempi" solmujen kautta ja mittaa matka 
+        return tämänhetkinensolmu.summaamatkat(0, tämänhetkinensolmu);
     }
 
     public void päivitänaapurienreitit() {
@@ -54,45 +42,42 @@ public class Dijkstra {
         Solmu vasennaapuri = new Solmu(tämänhetkinensolmu);
         vasennaapuri.x = (vasennaapuri.x - 1);
         if (vasennaapuri.x >= 0) {
-            vasennaapuri.arvioituetäisyys = arvioitumatkamaaliin(vasennaapuri.x, vasennaapuri.y);
-            if (kelpaakolistaan(vasennaapuri)) {
-                lisäänaapurinaapureihin(vasennaapuri);
+            if (onkoseinätaikäyty(vasennaapuri)) {
+                // ei lisätä naapureihin vaan päivitetään vanhemmat mikäli reittitähänasti 
+                //on lyhyempi
+                päivitäomaarvo(vasennaapuri);
+                vertaareittejä(vasennaapuri);
+                //metodi joka laittaa uuden vanhemman mikäli vertaareittejä antaa
+                //lyhyemmän reitin
             }
         }
         //oikeanaapuri
         Solmu oikeanaapuri = new Solmu(tämänhetkinensolmu);
         oikeanaapuri.x = (oikeanaapuri.x + 1);
         if (oikeanaapuri.x <= kartta.kartankoko - 1) {
-            oikeanaapuri.arvioituetäisyys = arvioitumatkamaaliin(oikeanaapuri.x, oikeanaapuri.y);
-            if (kelpaakolistaan(oikeanaapuri)) {
-                lisäänaapurinaapureihin(oikeanaapuri);
+            if (onkoseinätaikäyty(oikeanaapuri)) {
+                päivitäomaarvo(oikeanaapuri);
+                vertaareittejä(oikeanaapuri);
             }
         }
         //ylänaapuri
         Solmu ylänaapuri = new Solmu(tämänhetkinensolmu);
         ylänaapuri.y = (ylänaapuri.y - 1);
         if (ylänaapuri.y >= 0) {
-            ylänaapuri.arvioituetäisyys = arvioitumatkamaaliin(ylänaapuri.x, ylänaapuri.y);
-            if (kelpaakolistaan(ylänaapuri)) {
-                lisäänaapurinaapureihin(ylänaapuri);
+            if (onkoseinätaikäyty(ylänaapuri)) {
+                päivitäomaarvo(ylänaapuri);
+                vertaareittejä(ylänaapuri);
             }
         }
         //alanaapuri
         Solmu alanaapuri = new Solmu(tämänhetkinensolmu);
         alanaapuri.y = (alanaapuri.y + 1);
         if (alanaapuri.y <= kartta.kartankoko - 1) {
-            alanaapuri.arvioituetäisyys = arvioitumatkamaaliin(alanaapuri.x, alanaapuri.y);
-            if (kelpaakolistaan(alanaapuri)) {
-                lisäänaapurinaapureihin(alanaapuri);
+            if (onkoseinätaikäyty(alanaapuri)) {
+                päivitäomaarvo(ylänaapuri);
+                vertaareittejä(alanaapuri);
             }
         }
-    }
-
-    public void asetasolmulleF(Solmu solmu) {
-        //F = G + H
-        //laske F arvo ja aseta se solmuille
-        double F = arvioitumatkamaaliin(solmu.x, solmu.y) + matkatähänasti();
-        System.out.println("F " + F);
     }
 
     public boolean onseinä(Solmu solmu) {
@@ -108,26 +93,47 @@ public class Dijkstra {
         return uusisolmu;
     }
 
-    public boolean onlistassa(Solmu solmu) {
-        Solmu r = jono.get(new Koordinaatti(solmu.x, solmu.y));
-        if (r == null) {
-            return false;
+    public void vertaareittejä(Solmu solmu) {
+        //vertaa vanhempienmäärä arvoa ja sitä mikä tulisi tämänhetkisen solmun kautta
+        //arvoksi ja laita pienempi
+        päivitämatkanykyisestäsolmusta(solmu);//päivitä reitti tämänhetkisestä solmusta ko. solmuun            
+
+        if (solmu.matkatähänasti < solmu.matkatähänasti + kartta.arvokartta[solmu.y][solmu.x]) {
         }
-        return true;
     }
 
-    public void solmujonoon(Solmu solmu) {
-        Koordinaatti k = new Koordinaatti(solmu.x, solmu.y);
-        if (!this.jono.containsKey(k)) {
-            this.jono.put(k, solmu);
-        }
-
+    public int annaetäisyys(Solmu solmu, Solmu vierussolmu) {
+        //tänne vertailu solmujen etäisyyksistä 
+        //eli 1 ja 6 vierekkäin niin etäisyys on 5, muista ottaa itseisarvo
+        //lisää kaikkiin +1 ettei tule nollanarvoisia solmuja
+        int etäisyys = Math.abs(haesolmunarvo(solmu) - haesolmunarvo(vierussolmu));
+        return etäisyys;
     }
 
-    public void lisäänaapurinaapureihin(Solmu solmu) {
-        solmujono.add(solmu);
-        solmujonoon(solmu);
-        kartta.arvotasolmu(solmu);
+    public int haesolmunarvo(Solmu solmu) {
+        return kartta.arvokartta[solmu.y][solmu.x];
+    }
+
+    public void päivitäetäisyysvanhemmasta(Solmu solmu) {
+        solmu.etäisyysvanhemmasta = annaetäisyys(solmu, solmu.vanhempi);
+    }
+
+    public void päivitäreittitähänasti(Solmu solmu) {
+        //käy kaikki vanhemmat läpi ja niiden väliset etäisyydet ja summaa ne
+    }
+
+    public void päivitäomaarvo(Solmu solmu) {
+        solmu.omaarvo = haesolmunarvo(solmu);
+    }
+
+    public void päivitäarvo(Solmu solmu) {
+        if (solmu.matkatähänasti == 0) {
+            solmu.matkatähänasti = kartta.arvokartta[solmu.y][solmu.x];
+        }
+    }
+
+    public void päivitämatkanykyisestäsolmusta(Solmu solmu) {
+        solmu.matkatähänasti = tämänhetkinensolmu.matkatähänasti + kartta.arvokartta[solmu.y][solmu.x];
     }
 
     public void käysolmu(Solmu solmu) {
@@ -147,10 +153,7 @@ public class Dijkstra {
         return true;
     }
 
-    public boolean kelpaakolistaan(Solmu solmu) {
-        if (onlistassa(solmu)) {
-            return false;
-        }
+    public boolean onkoseinätaikäyty(Solmu solmu) {
         if (onseinä(solmu)) {
             return false;
         }
@@ -181,5 +184,3 @@ public class Dijkstra {
         return false;
     }
 }
-
-

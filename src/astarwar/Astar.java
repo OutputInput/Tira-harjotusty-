@@ -46,7 +46,6 @@ public class Astar {
     public int matkatähänasti() {
         //G
         // kulje "vanhempi" solmujen kautta ja mittaa matka 
-
         return tämänhetkinensolmu.summaamatkat(0, tämänhetkinensolmu);
     }
 
