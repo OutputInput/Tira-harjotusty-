@@ -15,9 +15,10 @@ import java.io.*;
 public class Kartta {
 
     private static Scanner lukija = new Scanner(System.in);
-    int kartankoko = 10;
+    int kartankoko = 15;
     char[][] kartta = new char[kartankoko][kartankoko];
     char[][] reittikartta = new char[kartankoko][kartankoko];
+    int[][] arvokartta;
     int alkupistey;
     int alkupistex;
     int loppupistey;
@@ -60,27 +61,27 @@ public class Kartta {
 
     public void arvotareitti(char[][] kartta) throws FileNotFoundException {
         reittikartta = uusikartta(kartta);
-        int[][] arvokartta = arvotakartta(kartta);
-
+        this.arvokartta = arvotakartta(kartta);
         for (int n = 0; n < kartankoko; n++) {
             for (int i = 0; i < kartankoko; i++) {
-                if (arvokartta[n][i] < 2) {
-                    reittikartta[n][i] = 'o';
-                }
-                if (arvokartta[n][i] == 0) {
-                    reittikartta[n][i] = 'A';
-                }
-                if (arvokartta[n][i] == 4) {
+                if (arvokartta[n][i] == -1) {
                     reittikartta[n][i] = 'L';
                     maalisolmu.x = i;
                     maalisolmu.y = n;
+                } else if (arvokartta[n][i] == 1) {
+                    reittikartta[n][i] = 'o';
+                } else if (arvokartta[n][i] == 30) {
+                    reittikartta[n][i] = '3';
+                } else if (arvokartta[n][i] == 400) {
+                    reittikartta[n][i] = '4';
+                } else if (arvokartta[n][i] == 0) {
+                    reittikartta[n][i] = 'A';
                 }
             }
         }
     }
 
     public char[][] uusikartta(char[][] kartta) {
-
         char[][] kartta2 = new char[kartankoko][kartankoko];
         for (int n = 0; n < kartankoko; n++) {
             for (int i = 0; i < kartankoko; i++) {
@@ -115,14 +116,38 @@ public class Kartta {
         tulostakartta(reittikartta);
     }
 
+    public void piirräreittisolmusta(Solmu solmu) throws IOException {
+        String nimi = new String("solmukartta");
+        BufferedWriter reittikarttatiedosto = new BufferedWriter(new FileWriter(nimi));
+        PriorityQueue<Solmu> käydytsolmut = new PriorityQueue<Solmu>();
+        käydytsolmut = käysolmuttakaperin(käydytsolmut, solmu);
+        System.out.println("s " + käydytsolmut.size());
+        piirräreitti(käydytsolmut);
+        System.out.println("solmukartta ");
+
+    }
+
+    public PriorityQueue<Solmu> käysolmuttakaperin(PriorityQueue<Solmu> käydytsolmut, Solmu vikasolmu) {
+        if (!vikasolmu.onkoalkusolmu) {
+            käydytsolmut.add(vikasolmu);
+            System.out.println(vikasolmu.toString());
+            käysolmuttakaperin(käydytsolmut, vikasolmu.vanhempi);
+        }
+        return käydytsolmut;
+    }
+
     public int[][] arvotakartta(char[][] kartta) {
-        int[][] arvokartta = new int[kartankoko][kartankoko];
+        arvokartta = new int[kartankoko][kartankoko];
         for (int x = 0; x < kartankoko; x++) {
             for (int y = 0; y < kartankoko; y++) {
                 if (kartta[y][x] == '#') {
                     arvokartta[y][x] = 10000;
-                } else {
-                    arvokartta[y][x] = 1;
+                }
+                if (kartta[y][x] == 'k') {
+                    arvokartta[y][x] = 30;
+                }
+                if (kartta[y][x] == '&') {
+                    arvokartta[y][x] = 400;
                 }
                 if (kartta[y][x] == 'A') {
                     arvokartta[y][x] = 0;
@@ -130,9 +155,12 @@ public class Kartta {
                     alkupistex = x;
                 }
                 if (kartta[y][x] == 'L') {
-                    arvokartta[y][x] = 4;
+                    arvokartta[y][x] = -1;
                     loppupistey = y;
                     loppupistex = x;
+                }
+                if (kartta[y][x] != '#' && kartta[y][x] != 'k' && kartta[y][x] != '&' && kartta[y][x] != 'A' && kartta[y][x] != 'L') {
+                    arvokartta[y][x] = 1;
                 }
             }
         }
@@ -169,5 +197,9 @@ public class Kartta {
 
     public int annaloppupistex() {
         return this.loppupistex;
+    }
+
+    public void arvotasolmu(Solmu solmu) {
+        solmu.etäisyysmuista = arvokartta[solmu.y][solmu.x];
     }
 }

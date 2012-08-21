@@ -29,6 +29,7 @@ public class Astar {
         int alkupistex = kartta.alkupistex;
         int alkupistey = kartta.alkupistey;
         alkusolmu = new Solmu(kartta.alkupistex, kartta.alkupistey, null, arvioitumatkamaaliin(alkupistex, alkupistey));
+        alkusolmu.onkoalkusolmu = true;
         tämänhetkinensolmu = alkusolmu;
     }
 
@@ -44,9 +45,9 @@ public class Astar {
 
     public int matkatähänasti() {
         //G
-        // kulje "vanhempi" solmujen kautta ja mittaa matka
-        //Täällä riittää että kattoo monta käyty jo koska etäisyys on 1
-        return kaydyt.size();
+        // kulje "vanhempi" solmujen kautta ja mittaa matka 
+
+        return tämänhetkinensolmu.summaamatkat(0, tämänhetkinensolmu);
     }
 
     public void päivitänaapurit() {
@@ -58,7 +59,6 @@ public class Astar {
             if (kelpaakolistaan(vasennaapuri)) {
                 asetasolmulleF(vasennaapuri);
                 lisäänaapurinaapureihin(vasennaapuri);
-
             }
         }
         //oikeanaapuri
@@ -69,7 +69,6 @@ public class Astar {
             if (kelpaakolistaan(oikeanaapuri)) {
                 asetasolmulleF(oikeanaapuri);
                 lisäänaapurinaapureihin(oikeanaapuri);
-
             }
         }
         //ylänaapuri
@@ -80,7 +79,6 @@ public class Astar {
             if (kelpaakolistaan(ylänaapuri)) {
                 asetasolmulleF(ylänaapuri);
                 lisäänaapurinaapureihin(ylänaapuri);
-
             }
         }
         //alanaapuri
@@ -91,7 +89,6 @@ public class Astar {
             if (kelpaakolistaan(alanaapuri)) {
                 asetasolmulleF(alanaapuri);
                 lisäänaapurinaapureihin(alanaapuri);
-
             }
         }
     }
@@ -99,9 +96,8 @@ public class Astar {
     public void asetasolmulleF(Solmu solmu) {
         //F = G + H
         //laske F arvo ja aseta se solmuille
-        double F = arvioitumatkamaaliin(solmu.x, solmu.y) + matkatähänasti();
+        double F = arvioitumatkamaaliin(solmu.x, solmu.y) + matkatähänasti()+1;
         solmu.F = F;
-        System.out.println("F " + F);
     }
 
     public boolean onseinä(Solmu solmu) {
@@ -112,9 +108,9 @@ public class Astar {
     }
 
     public Solmu parasvaihtoehto() {
-        //käytä täällä F:ää => matkatähänasti toimimaan
         Solmu uusisolmu;
         uusisolmu = this.solmujono.poll();
+        uusisolmu.summaamatkat(0, uusisolmu);
         return uusisolmu;
     }
 

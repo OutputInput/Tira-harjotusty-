@@ -49,7 +49,7 @@ public class Dijkstra {
         return kaydyt.size();
     }
 
-    public void päivitänaapurit() {
+    public void päivitänaapurienreitit() {
         //vasennaapuri
         Solmu vasennaapuri = new Solmu(tämänhetkinensolmu);
         vasennaapuri.x = (vasennaapuri.x - 1);
@@ -163,7 +163,7 @@ public class Dijkstra {
     public void kuljereitti() {
         käysolmu(alkusolmu);
         do {
-            päivitänaapurit();
+            päivitänaapurienreitit();
             käysolmu(parasvaihtoehto());
             if (solmujono.size() > 100) {
                 tämänhetkinensolmu = kartta.maalisolmu;

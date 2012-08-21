@@ -17,6 +17,7 @@ public class Solmu implements Comparable<Solmu> {
     int matkatähänasti;
     int etäisyysmuista;
     double F;
+    boolean onkoalkusolmu;
 
     public Solmu(int x, int y, Solmu vanhempi, double arvioituetäisyys) {
         this.x = x;
@@ -26,6 +27,7 @@ public class Solmu implements Comparable<Solmu> {
         this.matkatähänasti = 0;
         this.etäisyysmuista = 0;
         this.F = 0;
+        onkoalkusolmu = false;
     }
 
     public Solmu(Solmu solmu) {
@@ -36,6 +38,7 @@ public class Solmu implements Comparable<Solmu> {
         this.matkatähänasti = 0;
         this.etäisyysmuista = 0;
         this.F = 0;
+        onkoalkusolmu = false;
     }
 
     public Solmu() {
@@ -46,6 +49,7 @@ public class Solmu implements Comparable<Solmu> {
         this.matkatähänasti = 0;
         this.etäisyysmuista = 0;
         this.F = 0;
+        onkoalkusolmu = false;
     }
 
     public Solmu annavanhempi() {
@@ -64,12 +68,24 @@ public class Solmu implements Comparable<Solmu> {
     }
 
     public String toString() {
-
         return "solmu koordinaateissa x " + x + " y " + y;
     }
 
-    public int summaamatkat() {
-        this.matkatähänasti = vanhempi.matkatähänasti;
-        return 4;
+    public int summaamatkat(int montavanhempaa, Solmu vanhempi) {
+        do {
+            if (onkoalkusolmu) {
+                matkatähänasti = montavanhempaa;
+                return montavanhempaa;
+            }
+            if (vanhempi.onkoalkusolmu) {
+                matkatähänasti = montavanhempaa;
+                return montavanhempaa;
+            }
+            montavanhempaa = summaamatkat(montavanhempaa, vanhempi.annavanhempi()) + 1;
+        } while (vanhempi == null);
+        matkatähänasti = montavanhempaa;
+        return montavanhempaa;
     }
+    
+    
 }

@@ -25,7 +25,8 @@ public class Astarwar {
 
         //sitten voi luoda Astar:n
         Astar A = new Astar(kartta);
-
+        Dijkstra D = new Dijkstra(kartta);
+        
         kartta.arvotareitti(kartta.kartta);
         kartta.tulostakartta(kartta.kartta);
         kartta.tulostakartta(kartta.reittikartta);
@@ -33,14 +34,9 @@ public class Astarwar {
 
         A.kuljereitti();
 
-        System.out.println("käydyt " + A.käydytsolmut.size());
-        System.out.println("solmujono " + A.solmujono.size());
-        System.out.println("kaydyt " + A.kaydyt.size());
-        System.out.println("jono " + A.jono.size());
 
-        System.out.println(kartta.loppupistex);
-        System.out.println(kartta.loppupistey);
-        A.kartta.piirräreitti(A.käydytsolmut);
-        System.out.println("matka " + A.tämänhetkinensolmu.matka);
+        A.kartta.piirräreittisolmusta(A.tämänhetkinensolmu);
+        System.out.println("matka " + A.tämänhetkinensolmu.summaamatkat(0, A.tämänhetkinensolmu));
+        
     }
 }
