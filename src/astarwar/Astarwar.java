@@ -65,8 +65,9 @@ public class Astarwar {
         
         
         D.kartta.piirräreittisolmusta(D.tämänhetkinensolmu);
-        System.out.println("matka " + D.tämänhetkinensolmu.summaamatkat(0, D.tämänhetkinensolmu));
+        System.out.println("matka " + D.tämänhetkinensolmu.summaamatkat(0, D.tämänhetkinensolmu.annavanhempi()));
         System.out.println("koordinaatit " + D.tämänhetkinensolmu.toString());
+        lukija.nextLine();
         karttaD.piirräreitti(D.käydytsolmut);
         
 

@@ -102,7 +102,7 @@ public class Kartta {
                 for (int i = 0; i < kartankoko; i++) {
                     if (solmu.x == n && solmu.y == i) {
                        // reittikartta[i][n] = '-';
-                        reittikartta[i][n] = (char) (solmu.summaamatkat(0, solmu) + 65);
+                        reittikartta[i][n] = (char) (solmu.summaamatkat(0, solmu.annavanhempi()) + 65);
                         //reittikarttatiedosto.write("-");
                         reittikarttatiedosto.write('-');
                     } else {

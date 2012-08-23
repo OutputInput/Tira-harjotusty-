@@ -73,17 +73,16 @@ public class Solmu implements Comparable<Solmu> {
         return "solmu koordinaateissa x " + x + " y " + y;
     }
 
-    public int summaamatkat(int matkatähänasti, Solmu vanhempi) {
-        do {
-//            if (onkoalkusolmu) {
-//                return matkatähänasti;
-//            }
-            if (vanhempi.onkoalkusolmu) {
+    public int summaamatkat(int matkatähänasti, Solmu solmu) {
+
+        if (solmu != null) {
+            if (solmu.onkoalkusolmu) {
                 return matkatähänasti;
             }
-            matkatähänasti = summaamatkat(matkatähänasti, vanhempi.annavanhempi()) + omaarvo;
-        } while (vanhempi == null);
-        System.out.println(" " + matkatähänasti +"  " +  vanhempi.toString());
+            matkatähänasti = summaamatkat(matkatähänasti, solmu.annavanhempi()) + solmu.omaarvo;
+            System.out.println(" " + matkatähänasti + "  " + solmu.toString());
+        }
+
         return matkatähänasti;
     }
 }
