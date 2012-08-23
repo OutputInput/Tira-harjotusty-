@@ -14,13 +14,13 @@ import java.util.PriorityQueue;
  */
 public class Dijkstra {
 
-    Kartta kartta;
-    Solmu alkusolmu;
-    Solmu tämänhetkinensolmu;
-    PriorityQueue<Solmu> solmujono;
-    PriorityQueue<Solmu> käydytsolmut;
-    HashMap<Koordinaatti, Solmu> kaydyt = new HashMap();
-    HashMap<Koordinaatti, Solmu> jono = new HashMap();
+    public Kartta kartta;
+    public Solmu alkusolmu;
+    public Solmu tämänhetkinensolmu;
+    public PriorityQueue<Solmu> solmujono;
+    public PriorityQueue<Solmu> käydytsolmut;
+    public HashMap<Koordinaatti, Solmu> kaydyt = new HashMap();
+    public HashMap<Koordinaatti, Solmu> jono = new HashMap();
 
     public Dijkstra(Kartta kartta) {
         this.kartta = kartta;
@@ -175,6 +175,8 @@ public class Dijkstra {
             //valitse lähin paitsi jos on jo valittu 
             //päivitä naapurit
             asetatämänhetkiseksisolmuksi(päivitänaapurienetäisyydetjapalautalähin());//palauttaa solmun johon lyhin reitti
+
+
 
         } while (!ollaankomaalissa(tämänhetkinensolmu));
     }

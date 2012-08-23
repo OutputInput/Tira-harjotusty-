@@ -10,7 +10,7 @@ package astarwar;
  */
 public class Koordinaatti {
 
-    int[] koordinaatit;
+    public int[] koordinaatit;
 
     public Koordinaatti(int[] koordinaatit) {
         this.koordinaatit = koordinaatit;

@@ -15,23 +15,21 @@ import java.io.*;
 public class Kartta {
 
     private static Scanner lukija = new Scanner(System.in);
-    int kartankoko = 15;
-    char[][] kartta = new char[kartankoko][kartankoko];
-    char[][] reittikartta = new char[kartankoko][kartankoko];
-    int[][] arvokartta;
-    int alkupistey;
-    int alkupistex;
-    int loppupistey;
-    int loppupistex;
+    public int kartankoko = 15;
+    public char[][] kartta = new char[kartankoko][kartankoko];
+    public char[][] reittikartta = new char[kartankoko][kartankoko];
+    public int[][] arvokartta;
+    public int alkupistey;
+    public int alkupistex;
+    public int loppupistey;
+    public int loppupistex;
     Solmu maalisolmu = new Solmu(-1, -1, null, -1);
 
-    public void luetiedostotaulukkoon() throws FileNotFoundException {
+    public void luetiedostotaulukkoon(String tiedostonnimi) throws FileNotFoundException {
 
-        System.out.println("tiedoston nimi");
-        String tiedostonNimi = lukija.nextLine();
-        File tiedosto_olio = new File(tiedostonNimi);
+        File tiedosto_olio = new File(tiedostonnimi);
         if (!tiedosto_olio.exists()) {
-            System.out.println("Tiedostoa " + tiedostonNimi + " ei löydy!");
+            System.out.println("Tiedostoa " + tiedostonnimi + " ei löydy!");
             return;
         }
 

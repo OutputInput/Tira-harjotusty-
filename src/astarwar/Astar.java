@@ -14,13 +14,13 @@ import java.io.*;
  */
 public class Astar {
 
-    Kartta kartta;
-    Solmu alkusolmu;
-    Solmu tämänhetkinensolmu;
-    PriorityQueue<Solmu> solmujono;
-    PriorityQueue<Solmu> käydytsolmut;
-    HashMap<Koordinaatti, Solmu> kaydyt = new HashMap();
-    HashMap<Koordinaatti, Solmu> jono = new HashMap();
+    public Kartta kartta;
+    public Solmu alkusolmu;
+    public Solmu tämänhetkinensolmu;
+    public PriorityQueue<Solmu> solmujono;
+    public PriorityQueue<Solmu> käydytsolmut;
+    public HashMap<Koordinaatti, Solmu> kaydyt = new HashMap();
+    public HashMap<Koordinaatti, Solmu> jono = new HashMap();
 
     public Astar(Kartta kartta) {
         this.kartta = kartta;
@@ -95,7 +95,7 @@ public class Astar {
     public void asetasolmulleF(Solmu solmu) {
         //F = G + H
         //laske F arvo ja aseta se solmuille
-        double F = arvioitumatkamaaliin(solmu.x, solmu.y) + matkatähänasti()+1;
+        double F = arvioitumatkamaaliin(solmu.x, solmu.y) + matkatähänasti() + 1;
         solmu.F = F;
     }
 

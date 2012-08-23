@@ -10,16 +10,16 @@ package astarwar;
  */
 public class Solmu implements Comparable<Solmu> {
 
-    int x = 0;
-    int y = 0;
-    Solmu vanhempi;
-    double arvioituetäisyys; //H 
-    int vanhempienmäärä;
-    int etäisyysvanhemmasta;
-    double F;
-    boolean onkoalkusolmu;
-    int matkatähänasti;
-    int omaarvo;
+    public int x = 0;
+    public int y = 0;
+    public Solmu vanhempi;
+    public double arvioituetäisyys; //H 
+    public int vanhempienmäärä;
+    public int etäisyysvanhemmasta;
+    public double F;
+    public boolean onkoalkusolmu;
+    public int matkatähänasti;
+    public int omaarvo;
 
     public Solmu(int x, int y, Solmu vanhempi, double arvioituetäisyys) {
         this.x = x;
