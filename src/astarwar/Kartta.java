@@ -101,8 +101,10 @@ public class Kartta {
             for (int n = 0; n < kartankoko; n++) {
                 for (int i = 0; i < kartankoko; i++) {
                     if (solmu.x == n && solmu.y == i) {
-                        reittikartta[i][n] = '-';
-                        reittikarttatiedosto.write("-");
+                       // reittikartta[i][n] = '-';
+                        reittikartta[i][n] = (char) (solmu.summaamatkat(0, solmu) + 65);
+                        //reittikarttatiedosto.write("-");
+                        reittikarttatiedosto.write('-');
                     } else {
                         reittikarttatiedosto.write(reittikartta[i][n]);
                     }
@@ -199,5 +201,9 @@ public class Kartta {
 
     public void arvotasolmu(Solmu solmu) {
         solmu.etäisyysvanhemmasta = arvokartta[solmu.y][solmu.x];
+    }
+
+    public int haesolmunarvo(Solmu solmu) {
+        return arvokartta[solmu.y][solmu.x];
     }
 }

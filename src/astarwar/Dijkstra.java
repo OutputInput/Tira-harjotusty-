@@ -35,10 +35,12 @@ public class Dijkstra {
     public Solmu päivitänaapurienetäisyydetjapalautalähin() {
         Solmu uusi = new Solmu();
         //vasennaapuri
+        
+        System.out.println("pppppppppppppp");
         Solmu vasennaapuri = new Solmu(tämänhetkinensolmu);
         vasennaapuri.x = (vasennaapuri.x - 1);
         if (vasennaapuri.x >= 0) {
-            if (onkoseinätaikäyty(vasennaapuri)) {
+            if (!onkoseinätaikäyty(vasennaapuri)) {
                 päivitäomaarvo(vasennaapuri);
             }
         }
@@ -46,7 +48,7 @@ public class Dijkstra {
         Solmu oikeanaapuri = new Solmu(tämänhetkinensolmu);
         oikeanaapuri.x = (oikeanaapuri.x + 1);
         if (oikeanaapuri.x <= kartta.kartankoko - 1) {
-            if (onkoseinätaikäyty(oikeanaapuri)) {
+            if (!onkoseinätaikäyty(oikeanaapuri)) {
                 päivitäomaarvo(oikeanaapuri);
             }
         }
@@ -54,28 +56,32 @@ public class Dijkstra {
         Solmu ylänaapuri = new Solmu(tämänhetkinensolmu);
         ylänaapuri.y = (ylänaapuri.y - 1);
         if (ylänaapuri.y >= 0) {
-            if (onkoseinätaikäyty(ylänaapuri)) {
+            if (!onkoseinätaikäyty(ylänaapuri)) {
                 päivitäomaarvo(ylänaapuri);
-                vertaareittejä(ylänaapuri);
             }
         }
         //alanaapuri
         Solmu alanaapuri = new Solmu(tämänhetkinensolmu);
         alanaapuri.y = (alanaapuri.y + 1);
         if (alanaapuri.y <= kartta.kartankoko - 1) {
-            if (onkoseinätaikäyty(alanaapuri)) {
-                päivitäomaarvo(ylänaapuri);
-                vertaareittejä(alanaapuri);
+            if (!onkoseinätaikäyty(alanaapuri)) {
+                päivitäomaarvo(alanaapuri);
             }
         }
+
+//        käysolmu(tämänhetkinensolmu);
+
+        uusi = palautalähinnaapuri(vasennaapuri, oikeanaapuri, ylänaapuri, alanaapuri);
+        System.out.println("hmhmh " + uusi.toString());
+        uusi.omaarvo = 10000000;
         return palautalähinnaapuri(vasennaapuri, oikeanaapuri, ylänaapuri, alanaapuri);
     }
 
     public Solmu palautalähinnaapuri(Solmu vasen, Solmu oikea, Solmu ylä, Solmu ala) {
-
-        int[] lähin = new int[]{vasen.omaarvo, oikea.omaarvo, ylä.omaarvo, ala.omaarvo};
+        int[] lähin = new int[]{onalueella(vasen).omaarvo, onalueella(oikea).omaarvo, onalueella(ylä).omaarvo, onalueella(ala).omaarvo};
         Arrays.sort(lähin);
 
+        System.out.println("arvot " + vasen.omaarvo +" " + oikea.omaarvo +" " +ylä.omaarvo +" " +ala.omaarvo +" " );
         if (lähin[0] == vasen.omaarvo) {
             return vasen;
         }
@@ -89,6 +95,14 @@ public class Dijkstra {
             return ylä;
         }
         return vasen;
+    }
+
+    private Solmu onalueella(Solmu solmu) {
+        if (solmu.x >= 0 || solmu.y >= 0) {
+            return solmu;
+        }
+        solmu.omaarvo = 1000000;
+        return solmu;
     }
 
     public boolean onseinä(Solmu solmu) {
@@ -123,6 +137,7 @@ public class Dijkstra {
     }
 
     public int haesolmunarvo(Solmu solmu) {
+        System.out.println("arvo " +  kartta.arvokartta[solmu.y][solmu.x]);
         return kartta.arvokartta[solmu.y][solmu.x];
     }
 
@@ -156,18 +171,23 @@ public class Dijkstra {
         tämänhetkinensolmu = solmu;
         this.jono.remove(k);
         käydytsolmut.add(solmu);
-        System.out.println("kävin täällä " + solmu.x + " " + solmu.y + " arvioitumatka " + tämänhetkinensolmu.arvioituetäisyys);
+        System.out.println("kävin täällä " + solmu.x + " " + solmu.y + " omaarvo " + solmu.omaarvo);
     }
 
     public boolean onkoseinätaikäyty(Solmu solmu) {
         if (onseinä(solmu)) {
             return false;
         }
+        Solmu r = kaydyt.get(new Koordinaatti(solmu.x, solmu.y));
+        if (r == null) {
+           return false;
+        }
         return true;
     }
 
     public void kuljereitti() {
-        käysolmu(alkusolmu);
+        int laskuri = 0;
+        
         do {
             //päivitä naapurit 
             //=> vertaa tähänastista matkaa + etäisyyttä seuraavaan , 
@@ -176,8 +196,11 @@ public class Dijkstra {
             //päivitä naapurit
             asetatämänhetkiseksisolmuksi(päivitänaapurienetäisyydetjapalautalähin());//palauttaa solmun johon lyhin reitti
 
+            if(laskuri >100){
+                break;
+            }
 
-
+            laskuri++;
         } while (!ollaankomaalissa(tämänhetkinensolmu));
     }
 

@@ -14,7 +14,6 @@ public class Solmu implements Comparable<Solmu> {
     public int y = 0;
     public Solmu vanhempi;
     public double arvioituetäisyys; //H 
-    public int vanhempienmäärä;
     public int etäisyysvanhemmasta;
     public double F;
     public boolean onkoalkusolmu;
@@ -26,7 +25,6 @@ public class Solmu implements Comparable<Solmu> {
         this.y = y;
         this.vanhempi = vanhempi;
         this.arvioituetäisyys = arvioituetäisyys;
-        this.vanhempienmäärä = 0;
         this.etäisyysvanhemmasta = 0;
         this.F = 0;
         onkoalkusolmu = false;
@@ -38,7 +36,6 @@ public class Solmu implements Comparable<Solmu> {
         this.y = solmu.y;
         this.vanhempi = solmu;
         this.arvioituetäisyys = solmu.arvioituetäisyys;
-        this.vanhempienmäärä = 0;
         this.etäisyysvanhemmasta = 0;
         this.F = 0;
         onkoalkusolmu = false;
@@ -51,7 +48,6 @@ public class Solmu implements Comparable<Solmu> {
         this.y = 0;
         this.vanhempi = null;
         this.arvioituetäisyys = 0;
-        this.vanhempienmäärä = 0;
         this.etäisyysvanhemmasta = 0;
         this.F = 0;
         onkoalkusolmu = false;
@@ -77,19 +73,17 @@ public class Solmu implements Comparable<Solmu> {
         return "solmu koordinaateissa x " + x + " y " + y;
     }
 
-    public int summaamatkat(int montavanhempaa, Solmu vanhempi) {
+    public int summaamatkat(int matkatähänasti, Solmu vanhempi) {
         do {
-            if (onkoalkusolmu) {
-                vanhempienmäärä = montavanhempaa;
-                return montavanhempaa;
-            }
+//            if (onkoalkusolmu) {
+//                return matkatähänasti;
+//            }
             if (vanhempi.onkoalkusolmu) {
-                vanhempienmäärä = montavanhempaa;
-                return montavanhempaa;
+                return matkatähänasti;
             }
-            montavanhempaa = summaamatkat(montavanhempaa, vanhempi.annavanhempi()) + 1;
+            matkatähänasti = summaamatkat(matkatähänasti, vanhempi.annavanhempi()) + omaarvo;
         } while (vanhempi == null);
-        vanhempienmäärä = montavanhempaa;
-        return montavanhempaa;
+        System.out.println(" " + matkatähänasti +"  " +  vanhempi.toString());
+        return matkatähänasti;
     }
 }

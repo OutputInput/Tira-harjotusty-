@@ -21,6 +21,7 @@ public class Astarwar {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
+        /*
         //nää kolme pitää olla ensin
         Kartta kartta = new Kartta();
         System.out.println("tiedoston nimi");
@@ -38,20 +39,22 @@ public class Astarwar {
         A.kuljereitti();
 
         A.kartta.piirräreittisolmusta(A.tämänhetkinensolmu);
+        A.kartta.piirräreitti(A.käydytsolmut);
         System.out.println("matka " + A.tämänhetkinensolmu.summaamatkat(0, A.tämänhetkinensolmu));
+        System.out.println("koordinaatit " + A.tämänhetkinensolmu.toString());
 
+        */
         
-        /*
         
         
         Kartta karttaD = new Kartta();
         System.out.println("tiedoston nimi");
-        tiedostonnimi = lukija.nextLine();
+        String tiedostonnimi = lukija.nextLine();
         karttaD.luetiedostotaulukkoon(tiedostonnimi);
         karttaD.arvotakartta(karttaD.kartta);
         
         
-        Dijkstra D = new Dijkstra(karttaD);
+        D D = new D(karttaD);
         
         karttaD.arvotareitti(karttaD.kartta);
         karttaD.tulostakartta(karttaD.kartta);
@@ -63,7 +66,10 @@ public class Astarwar {
         
         D.kartta.piirräreittisolmusta(D.tämänhetkinensolmu);
         System.out.println("matka " + D.tämänhetkinensolmu.summaamatkat(0, D.tämänhetkinensolmu));
+        System.out.println("koordinaatit " + D.tämänhetkinensolmu.toString());
+        karttaD.piirräreitti(D.käydytsolmut);
+        
 
-        */
+        
     }
 }
