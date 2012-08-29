@@ -20,6 +20,14 @@ public class Solmu implements Comparable<Solmu> {
     public int matkatähänasti;
     public int omaarvo;
 
+    /**
+     * konstruktori
+     *
+     * @param x
+     * @param y
+     * @param vanhempi
+     * @param arvioituetäisyys
+     */
     public Solmu(int x, int y, Solmu vanhempi, double arvioituetäisyys) {
         this.x = x;
         this.y = y;
@@ -31,6 +39,11 @@ public class Solmu implements Comparable<Solmu> {
         this.omaarvo = 0;
     }
 
+    /**
+     * konstruktori
+     *
+     * @param solmu
+     */
     public Solmu(Solmu solmu) {
         this.x = solmu.x;
         this.y = solmu.y;
@@ -43,6 +56,9 @@ public class Solmu implements Comparable<Solmu> {
         this.omaarvo = 0;
     }
 
+    /**
+     * konstruktori
+     */
     public Solmu() {
         this.x = 0;
         this.y = 0;
@@ -58,6 +74,11 @@ public class Solmu implements Comparable<Solmu> {
         return this.vanhempi;
     }
 
+    /**
+     * vertailu 
+     * @param s
+     * @return 
+     */
     @Override
     public int compareTo(Solmu s) {
         if (this.F == s.F) {
@@ -68,11 +89,20 @@ public class Solmu implements Comparable<Solmu> {
             return -1;
         }
     }
-
+/**
+ * tostring
+ * @return 
+ */
     public String toString() {
         return "solmu koordinaateissa x " + x + " y " + y;
     }
 
+    /**
+     * käy solmun vanhemmissa ja summaa matkat
+     * @param matkatähänasti
+     * @param solmu
+     * @return 
+     */
     public int summaamatkat(int matkatähänasti, Solmu solmu) {
 
         if (solmu != null) {
@@ -80,9 +110,7 @@ public class Solmu implements Comparable<Solmu> {
                 return matkatähänasti;
             }
             matkatähänasti = summaamatkat(matkatähänasti, solmu.annavanhempi()) + solmu.omaarvo;
-            System.out.println(" " + matkatähänasti + "  " + solmu.toString());
         }
-
         return matkatähänasti;
     }
 }

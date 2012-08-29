@@ -9,6 +9,7 @@ import java.util.*;
 import java.io.*;
 
 /**
+ * Dijkstra
  *
  * @author pxkorpel
  */
@@ -22,6 +23,11 @@ public class D {
     public HashMap<Koordinaatti, Solmu> kaydyt = new HashMap();
     public HashMap<Koordinaatti, Solmu> jono = new HashMap();
 
+    /**
+     * konstruktori
+     *
+     * @param kartta
+     */
     public D(Kartta kartta) {
         this.kartta = kartta;
         this.solmujono = new PriorityQueue<Solmu>();
@@ -33,6 +39,13 @@ public class D {
         tämänhetkinensolmu = alkusolmu;
     }
 
+    /**
+     * arvioi matkan maaliin suorinta mahdollista reittiä pitkin
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public double arvioitumatkamaaliin(int x, int y) {
         //H
         int pistex = x - kartta.loppupistex;
@@ -49,6 +62,13 @@ public class D {
         return tämänhetkinensolmu.summaamatkat(0, tämänhetkinensolmu);
     }
 
+    /**
+     * tehdään ylös, alas, vasemmalle ja oikealle tarkistaa onko naapuri enää
+     * kartalla antaa arvioidun etäisyyden naapurille hakee kartasta naapurin
+     * omanarvon(periaatteessa kuinka pitkä matka naapuriin on) testaa kelpaako
+     * käytävien solmujen listaan laskee F arvon (F = matka + arvioitu matka)
+     * lisää naapureihin mikäli ehdot täyttyivät
+     */
     public void päivitänaapurit() {
         //vasennaapuri
         Solmu vasennaapuri = new Solmu(tämänhetkinensolmu);
@@ -96,10 +116,15 @@ public class D {
         }
     }
 
+    /**
+     * F = G + H (kuljettu matka + arvioitu matka) laske F arvo ja aseta se
+     * solmuille
+     *
+     * @param solmu
+     */
     public void asetasolmulleF(Solmu solmu) {
-        //F = G + H
-        //laske F arvo ja aseta se solmuille
-        double F = arvioitumatkamaaliin(solmu.x, solmu.y) + matkatähänasti() ;
+
+        double F = arvioitumatkamaaliin(solmu.x, solmu.y) + matkatähänasti();
         solmu.F = F;
     }
 
@@ -110,6 +135,11 @@ public class D {
         return false;
     }
 
+    /**
+     * ottaa vierussolmuista lähimmän vaihtoehdon
+     *
+     * @return
+     */
     public Solmu parasvaihtoehto() {
         Solmu uusisolmu;
         uusisolmu = this.solmujono.poll();
@@ -117,6 +147,12 @@ public class D {
         return uusisolmu;
     }
 
+    /**
+     * tarkistaa onko käytävien solmujen listassa
+     *
+     * @param solmu
+     * @return
+     */
     public boolean onlistassa(Solmu solmu) {
         Solmu r = jono.get(new Koordinaatti(solmu.x, solmu.y));
         if (r == null) {
@@ -125,6 +161,11 @@ public class D {
         return true;
     }
 
+    /**
+     * laittaa solmun käytävien solmujen jonoon(hashmap)
+     *
+     * @param solmu
+     */
     public void solmujonoon(Solmu solmu) {
         Koordinaatti k = new Koordinaatti(solmu.x, solmu.y);
         if (!this.jono.containsKey(k)) {
@@ -133,21 +174,37 @@ public class D {
 
     }
 
+    /**
+     * laittaa solmun käytävien solmujen jonoon (priorityqueue)
+     *
+     * @param solmu
+     */
     public void lisäänaapurinaapureihin(Solmu solmu) {
         solmujono.add(solmu);
         solmujonoon(solmu);
         kartta.arvotasolmu(solmu);
     }
 
+    /**
+     * merkkaa solmun käydyksi eli poistaa sen käytävien solmujen jonoista
+     *
+     * @param solmu
+     */
     public void käysolmu(Solmu solmu) {
         Koordinaatti k = new Koordinaatti(solmu.x, solmu.y);
         this.kaydyt.put(k, solmu);
         tämänhetkinensolmu = solmu;
         this.jono.remove(k);
         käydytsolmut.add(solmu);
-        System.out.println("kävin täällä " + solmu.x + " " + solmu.y + " arvioitumatka " + tämänhetkinensolmu.arvioituetäisyys + "F arvo " + solmu.F);
+        //   System.out.println("kävin täällä " + solmu.x + " " + solmu.y + " arvioitumatka " + tämänhetkinensolmu.arvioituetäisyys + "F arvo " + solmu.F);
     }
 
+    /**
+     * tarkistaa onko solmu jo käytyjen solmujen jonossa
+     *
+     * @param solmu
+     * @return
+     */
     public boolean onkokäyty(Solmu solmu) {
         Solmu r = kaydyt.get(new Koordinaatti(solmu.x, solmu.y));
         if (r == null) {
@@ -156,6 +213,13 @@ public class D {
         return true;
     }
 
+    /**
+     * tarkistaa onko solmu jo listassa tai onko se seinä jota ei voida lisätä
+     * listaan, ja onko solmu jo käyty
+     *
+     * @param solmu
+     * @return
+     */
     public boolean kelpaakolistaan(Solmu solmu) {
         if (onlistassa(solmu)) {
             return false;
@@ -169,6 +233,9 @@ public class D {
         return true;
     }
 
+    /**
+     * do while looppi joka käytännössä metodien avulla etsii reitin
+     */
     public void kuljereitti() {
         käysolmu(alkusolmu);
         do {
@@ -177,12 +244,16 @@ public class D {
             if (solmujono.size() > 100) {
                 tämänhetkinensolmu = kartta.maalisolmu;
             }
-            if (ollaankomaalissa(tämänhetkinensolmu)) {
-                System.out.println("maalissa");
-            }
+            
         } while (!ollaankomaalissa(tämänhetkinensolmu));
     }
 
+    /**
+     * tarkistetaan ollaanko maalissa
+     *
+     * @param solmu
+     * @return
+     */
     public boolean ollaankomaalissa(Solmu solmu) {
         if (solmu.x == kartta.maalisolmu.x && solmu.y == kartta.maalisolmu.y) {
             return true;

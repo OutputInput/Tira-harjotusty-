@@ -8,7 +8,7 @@ import java.util.*;
 import java.io.*;
 
 /**
- * GT
+ * Käsittelee annettua karttaa
  *
  * @author pxkorpel
  */
@@ -25,6 +25,12 @@ public class Kartta {
     public int loppupistex;
     Solmu maalisolmu = new Solmu(-1, -1, null, -1);
 
+    /**
+     * lukee tiedostosta kartan char taulukkoon
+     *
+     * @param tiedostonnimi
+     * @throws FileNotFoundException
+     */
     public void luetiedostotaulukkoon(String tiedostonnimi) throws FileNotFoundException {
 
         File tiedosto_olio = new File(tiedostonnimi);
@@ -46,6 +52,12 @@ public class Kartta {
         syöttötiedosto.close();
     }
 
+    /**
+     * tulostaa kartan char taulukosta
+     *
+     * @param kartta
+     * @throws FileNotFoundException
+     */
     public void tulostakartta(char[][] kartta) throws FileNotFoundException {
         System.out.println("");
 
@@ -57,6 +69,14 @@ public class Kartta {
         }
     }
 
+    /**
+     * arvottaa reitin sen perusteella mitä merkkejä kartassa on saa numeerisen
+     * kartan ja tekee siitä yksinkertaisemman näköisen esim. kaikki random
+     * merkit jotka kaikki ovat yhtä arvokkaita niin saavat saman arvon.
+     *
+     * @param kartta
+     * @throws FileNotFoundException
+     */
     public void arvotareitti(char[][] kartta) throws FileNotFoundException {
         reittikartta = uusikartta(kartta);
         this.arvokartta = arvotakartta(kartta);
@@ -79,6 +99,12 @@ public class Kartta {
         }
     }
 
+    /**
+     * alustaa kartan
+     *
+     * @param kartta
+     * @return
+     */
     public char[][] uusikartta(char[][] kartta) {
         char[][] kartta2 = new char[kartankoko][kartankoko];
         for (int n = 0; n < kartankoko; n++) {
@@ -89,6 +115,12 @@ public class Kartta {
         return kartta2;
     }
 
+    /**
+     * piirtää reitin tiedostoon ja reittikartta taulukkoon
+     *
+     * @param käydytsolmut
+     * @throws IOException
+     */
     public void piirräreitti(PriorityQueue<Solmu> käydytsolmut) throws IOException {
 
         String nimi = new String("uk");
@@ -101,7 +133,7 @@ public class Kartta {
             for (int n = 0; n < kartankoko; n++) {
                 for (int i = 0; i < kartankoko; i++) {
                     if (solmu.x == n && solmu.y == i) {
-                       // reittikartta[i][n] = '-';
+                        // reittikartta[i][n] = '-';
                         reittikartta[i][n] = (char) (solmu.summaamatkat(0, solmu.annavanhempi()) + 65);
                         //reittikarttatiedosto.write("-");
                         reittikarttatiedosto.write('-');
@@ -116,26 +148,43 @@ public class Kartta {
         tulostakartta(reittikartta);
     }
 
+    /**
+     * luo priorityqueue:n solmun vanhemmista käyttää luotua priorityqueue:ta
+     * piirräreitti metodissa piirtämään kuljetun reitin
+     *
+     * @param solmu
+     * @throws IOException
+     */
     public void piirräreittisolmusta(Solmu solmu) throws IOException {
         String nimi = new String("solmukartta");
         BufferedWriter reittikarttatiedosto = new BufferedWriter(new FileWriter(nimi));
         PriorityQueue<Solmu> käydytsolmut = new PriorityQueue<Solmu>();
         käydytsolmut = käysolmuttakaperin(käydytsolmut, solmu);
-        System.out.println("s " + käydytsolmut.size());
         piirräreitti(käydytsolmut);
-        System.out.println("solmukartta ");
-
     }
 
+    /**
+     * käy solmun vanhemmat ja pistää ne priorityqueue:n
+     *
+     * @param käydytsolmut
+     * @param vikasolmu
+     * @return
+     */
     public PriorityQueue<Solmu> käysolmuttakaperin(PriorityQueue<Solmu> käydytsolmut, Solmu vikasolmu) {
         if (!vikasolmu.onkoalkusolmu) {
             käydytsolmut.add(vikasolmu);
-            System.out.println(vikasolmu.toString());
             käysolmuttakaperin(käydytsolmut, vikasolmu.vanhempi);
         }
         return käydytsolmut;
     }
 
+    /**
+     * lukee tekstiperäisen kartan ja antaa numeeriset arvot niille arvokartta
+     * taulukkoon
+     *
+     * @param kartta
+     * @return
+     */
     public int[][] arvotakartta(char[][] kartta) {
         arvokartta = new int[kartankoko][kartankoko];
         for (int x = 0; x < kartankoko; x++) {
@@ -167,6 +216,13 @@ public class Kartta {
         return arvokartta;
     }
 
+    /**
+     * testaa onko seinä
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean onkoseinä(int x, int y) {
         char alkio = kartta[y][x];
         if (alkio == '#') {
@@ -175,6 +231,13 @@ public class Kartta {
         return false;
     }
 
+    /**
+     * testaa onko maali
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean onkomaali(int x, int y) {
         char alkio = kartta[y][x];
         if (alkio == 'L') {

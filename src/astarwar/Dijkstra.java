@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 /**
+ * ei käytössä
  *
  * @author pxkorpel
  */
@@ -35,7 +36,7 @@ public class Dijkstra {
     public Solmu päivitänaapurienetäisyydetjapalautalähin() {
         Solmu uusi = new Solmu();
         //vasennaapuri
-        
+
         System.out.println("pppppppppppppp");
         Solmu vasennaapuri = new Solmu(tämänhetkinensolmu);
         vasennaapuri.x = (vasennaapuri.x - 1);
@@ -81,7 +82,7 @@ public class Dijkstra {
         int[] lähin = new int[]{onalueella(vasen).omaarvo, onalueella(oikea).omaarvo, onalueella(ylä).omaarvo, onalueella(ala).omaarvo};
         Arrays.sort(lähin);
 
-        System.out.println("arvot " + vasen.omaarvo +" " + oikea.omaarvo +" " +ylä.omaarvo +" " +ala.omaarvo +" " );
+        System.out.println("arvot " + vasen.omaarvo + " " + oikea.omaarvo + " " + ylä.omaarvo + " " + ala.omaarvo + " ");
         if (lähin[0] == vasen.omaarvo) {
             return vasen;
         }
@@ -137,7 +138,7 @@ public class Dijkstra {
     }
 
     public int haesolmunarvo(Solmu solmu) {
-        System.out.println("arvo " +  kartta.arvokartta[solmu.y][solmu.x]);
+        System.out.println("arvo " + kartta.arvokartta[solmu.y][solmu.x]);
         return kartta.arvokartta[solmu.y][solmu.x];
     }
 
@@ -180,14 +181,14 @@ public class Dijkstra {
         }
         Solmu r = kaydyt.get(new Koordinaatti(solmu.x, solmu.y));
         if (r == null) {
-           return false;
+            return false;
         }
         return true;
     }
 
     public void kuljereitti() {
         int laskuri = 0;
-        
+
         do {
             //päivitä naapurit 
             //=> vertaa tähänastista matkaa + etäisyyttä seuraavaan , 
@@ -196,7 +197,7 @@ public class Dijkstra {
             //päivitä naapurit
             asetatämänhetkiseksisolmuksi(päivitänaapurienetäisyydetjapalautalähin());//palauttaa solmun johon lyhin reitti
 
-            if(laskuri >100){
+            if (laskuri > 100) {
                 break;
             }
 

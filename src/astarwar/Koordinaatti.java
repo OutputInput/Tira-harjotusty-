@@ -22,6 +22,11 @@ public class Koordinaatti {
         koordinaatit[1] = y;
     }
 
+    /**
+     *
+     * @param kO
+     * @return
+     */
     @Override
     public boolean equals(Object kO) {
         Koordinaatti k = (Koordinaatti) kO;
@@ -33,6 +38,11 @@ public class Koordinaatti {
         return true;
     }
 
+    /**
+     * piti luoda oma hashcode jotta koordinaatti toimisi oikein
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 3;
