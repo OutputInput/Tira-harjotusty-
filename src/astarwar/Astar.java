@@ -168,7 +168,6 @@ public class Astar {
         if (!this.jono.containsKey(k)) {
             this.jono.put(k, solmu);
         }
-
     }
 
     /**

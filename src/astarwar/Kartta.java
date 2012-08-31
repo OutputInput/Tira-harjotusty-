@@ -15,15 +15,17 @@ import java.io.*;
 public class Kartta {
 
     private static Scanner lukija = new Scanner(System.in);
-    public int kartankoko = 15;
+    public int kartankoko = 74;
     public char[][] kartta = new char[kartankoko][kartankoko];
     public char[][] reittikartta = new char[kartankoko][kartankoko];
     public int[][] arvokartta;
+    public char[][] randomkartta;
     public int alkupistey;
     public int alkupistex;
     public int loppupistey;
     public int loppupistex;
-    Solmu maalisolmu = new Solmu(-1, -1, null, -1);
+    public Solmu maalisolmu = new Solmu(-1, -1, null, -1);
+    public int[][] randomarvokartta;
 
     /**
      * lukee tiedostosta kartan char taulukkoon
@@ -224,10 +226,18 @@ public class Kartta {
      * @return
      */
     public boolean onkoseinä(int x, int y) {
-        char alkio = kartta[y][x];
-        if (alkio == '#') {
-            return true;
+        if (kartta.length > 3) {
+            char alkio = kartta[y][x];
+            if (alkio == '#') {
+                return true;
+            }
+        } else {
+            char alkio = randomkartta[y][x];
+            if (alkio == '#') {
+                return true;
+            }
         }
+
         return false;
     }
 
@@ -239,9 +249,16 @@ public class Kartta {
      * @return
      */
     public boolean onkomaali(int x, int y) {
-        char alkio = kartta[y][x];
-        if (alkio == 'L') {
-            return true;
+        if (kartta.length > 3) {
+            char alkio = kartta[y][x];
+            if (alkio == 'L') {
+                return true;
+            }
+        } else {
+            char alkio = randomkartta[y][x];
+            if (alkio == 'L') {
+                return true;
+            }
         }
         return false;
     }
@@ -268,5 +285,24 @@ public class Kartta {
 
     public int haesolmunarvo(Solmu solmu) {
         return arvokartta[solmu.y][solmu.x];
+    }
+
+    public char[][] generoikartta(int kartanakseli) {
+        randomkartta = new char[kartanakseli][kartanakseli];
+//pitäis muuttaa arvotasolmua jos haluaa käyttää random karttaa
+        int luku = 0;
+        for (int i = 0; i < kartanakseli; i++) {
+            for (int k = 0; k < kartanakseli; k++) {
+                randomkartta[i][k] = 'o';
+                if (luku % 4 == 0) {
+                    randomkartta[i][k] = '#';
+                }
+                luku++;
+            }
+        }
+        int loppupiste = ((kartanakseli - 10) * (kartanakseli - 10)) - kartanakseli;
+        randomkartta[0][0] = 'A';
+        randomkartta[25][50] = 'L';
+        return randomkartta;
     }
 }

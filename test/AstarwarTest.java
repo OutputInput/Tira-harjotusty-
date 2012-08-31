@@ -8,6 +8,7 @@ import astarwar.Dijkstra;
 import astarwar.Kartta;
 import astarwar.Solmu;
 import java.io.FileNotFoundException;
+import java.util.PriorityQueue;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -23,22 +24,13 @@ public class AstarwarTest {
     public AstarwarTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() throws FileNotFoundException {
-        Kartta kartta = new Kartta();
+        kartta = new Kartta();
         kartta.luetiedostotaulukkoon("k");
         kartta.arvotakartta(kartta.kartta);
-        Astar A = new Astar(kartta);
+        A = new Astar(kartta);
         Dijkstra D = new Dijkstra(kartta);
-
     }
 
     @After
@@ -51,7 +43,7 @@ public class AstarwarTest {
     // public void hello() {}
 
     @Test
-    public void arvioitumatkamaaliin() {
+    public void testarvioitumatkamaaliin() {
         boolean totta = false;
         if (A.arvioitumatkamaaliin(3, 4) > 0) {
             totta = true;
@@ -60,11 +52,8 @@ public class AstarwarTest {
     }
 
     @Test
-    public void matkatähänasti() {
-    }
-
-    @Test
     public void testMatkatähänasti() {
+        A.kuljereitti();
         boolean totta = false;
         if (A.matkatähänasti() > 0) {
             totta = true;
@@ -127,6 +116,12 @@ public class AstarwarTest {
      */
     @Test
     public void testOnlistassa() {
+        Solmu solmu = new Solmu();
+        solmu.x = 2;
+        solmu.y = 2;
+        A.solmujonoon(solmu);
+        boolean oliko = A.onlistassa(solmu);
+        assertTrue(oliko);
     }
 
     /**
@@ -134,6 +129,10 @@ public class AstarwarTest {
      */
     @Test
     public void testSolmujonoon() {
+        Solmu solmu = new Solmu();
+        A.solmujonoon(solmu);
+        boolean oliko = A.onlistassa(solmu);
+        assertTrue(oliko);
     }
 
     /**
@@ -141,6 +140,14 @@ public class AstarwarTest {
      */
     @Test
     public void testLisäänaapurinaapureihin() {
+        Solmu solmu = new Solmu();
+        int koko = A.solmujono.size();
+        A.lisäänaapurinaapureihin(solmu);
+        boolean totta = false;
+        if (koko != A.solmujono.size()) {
+            totta = true;
+        }
+        assertTrue(totta);
     }
 
     /**
@@ -148,6 +155,14 @@ public class AstarwarTest {
      */
     @Test
     public void testKäysolmu() {
+        Solmu solmu = new Solmu();
+        int koko = A.käydytsolmut.size();
+        A.käysolmu(solmu);
+        boolean totta = false;
+        if (koko != A.käydytsolmut.size()) {
+            totta = true;
+        }
+        assertTrue(totta);
     }
 
     /**
@@ -155,6 +170,11 @@ public class AstarwarTest {
      */
     @Test
     public void testOnkokäyty() {
+        Solmu solmu = new Solmu();
+        solmu.x = 2;
+        solmu.y = 2;
+        A.käysolmu(solmu);
+        assertTrue(A.onkokäyty(solmu));
     }
 
     /**
@@ -176,6 +196,10 @@ public class AstarwarTest {
      */
     @Test
     public void testOllaankomaalissa() {
+        Solmu solmu = new Solmu();
+        solmu.x = kartta.maalisolmu.x;
+        solmu.y = kartta.maalisolmu.y;
+        assertTrue(A.ollaankomaalissa(solmu));
     }
 
     /**
@@ -197,6 +221,12 @@ public class AstarwarTest {
      */
     @Test
     public void testArvotareitti() throws Exception {
+        boolean onjotain = false;
+        kartta.arvotareitti(kartta.reittikartta);
+        if (kartta.reittikartta.length > 0) {
+            onjotain = true;
+        }
+        assertTrue(onjotain);
     }
 
     /**
@@ -204,6 +234,9 @@ public class AstarwarTest {
      */
     @Test
     public void testUusikartta() {
+        char kirjain = kartta.reittikartta[2][2];
+        char[][] uusikartta = kartta.uusikartta(kartta.reittikartta);
+        assertEquals(kirjain, uusikartta[2][2]);
     }
 
     /**
@@ -225,6 +258,14 @@ public class AstarwarTest {
      */
     @Test
     public void testKäysolmuttakaperin() {
+        PriorityQueue<Solmu> käydytsolmut = new PriorityQueue<Solmu>();;
+        Solmu solmu = new Solmu();
+        solmu.onkoalkusolmu = true;
+        Solmu solmu2 = new Solmu(solmu);
+        käydytsolmut.add(solmu);
+        käydytsolmut.add(solmu2);
+        PriorityQueue<Solmu> jono = kartta.käysolmuttakaperin(käydytsolmut, solmu);
+        assertTrue(jono.contains(solmu));
     }
 
     /**
@@ -232,6 +273,14 @@ public class AstarwarTest {
      */
     @Test
     public void testArvotakartta() {
+        kartta.arvotakartta(kartta.kartta);
+        for (int i = 0; i < kartta.kartankoko; i++) {
+            for (int k = 0; k < kartta.kartankoko; k++) {
+                if (kartta.arvokartta[i][k] == 10000) {
+                    assertTrue(true);
+                }
+            }
+        }
     }
 
     /**
@@ -239,6 +288,9 @@ public class AstarwarTest {
      */
     @Test
     public void testOnkoseinä() {
+        
+        
+        
     }
 
     /**
@@ -324,13 +376,13 @@ public class AstarwarTest {
     @Test
     public void testHashCode() {
     }
-    
+
     /**
-     * Test of päivitänaapurienetäisyydetjapalautalähin method, of class Dijkstra.
+     * Test of päivitänaapurienetäisyydetjapalautalähin method, of class
+     * Dijkstra.
      */
     @Test
     public void testPäivitänaapurienetäisyydetjapalautalähin() {
-       
     }
 
     /**
@@ -338,17 +390,13 @@ public class AstarwarTest {
      */
     @Test
     public void testPalautalähinnaapuri() {
-       
     }
-
-    
 
     /**
      * Test of vertaareittejä method, of class Dijkstra.
      */
     @Test
     public void testVertaareittejä() {
-        
     }
 
     /**
@@ -356,7 +404,6 @@ public class AstarwarTest {
      */
     @Test
     public void testAnnaetäisyys() {
-       
     }
 
     /**
@@ -364,7 +411,6 @@ public class AstarwarTest {
      */
     @Test
     public void testHaesolmunarvo() {
-        
     }
 
     /**
@@ -372,7 +418,6 @@ public class AstarwarTest {
      */
     @Test
     public void testPäivitäetäisyysvanhemmasta() {
-       
     }
 
     /**
@@ -380,7 +425,6 @@ public class AstarwarTest {
      */
     @Test
     public void testLaskereitinpituus() {
-        
     }
 
     /**
@@ -388,7 +432,6 @@ public class AstarwarTest {
      */
     @Test
     public void testPäivitäomaarvo() {
-        
     }
 
     /**
@@ -396,7 +439,6 @@ public class AstarwarTest {
      */
     @Test
     public void testPäivitäarvo() {
-        
     }
 
     /**
@@ -404,20 +446,12 @@ public class AstarwarTest {
      */
     @Test
     public void testPäivitämatkanykyisestäsolmusta() {
-        
     }
-
-    
 
     /**
      * Test of onkoseinätaikäyty method, of class Dijkstra.
      */
     @Test
     public void testOnkoseinätaikäyty() {
-        
     }
-
-    
-
-    
 }

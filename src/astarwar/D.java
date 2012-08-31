@@ -241,9 +241,7 @@ public class D {
         do {
             päivitänaapurit();
             käysolmu(parasvaihtoehto());
-            if (solmujono.size() > 100) {
-                tämänhetkinensolmu = kartta.maalisolmu;
-            }
+            
             
         } while (!ollaankomaalissa(tämänhetkinensolmu));
     }

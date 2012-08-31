@@ -94,7 +94,7 @@ public class Solmu implements Comparable<Solmu> {
  * @return 
  */
     public String toString() {
-        return "solmu koordinaateissa x " + x + " y " + y;
+        return " F " + F;
     }
 
     /**
