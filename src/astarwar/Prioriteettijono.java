@@ -8,6 +8,8 @@ import java.util.List;
  */
 /**
  *
+ * Prioriteettijono
+ * 
  * @author pxkorpel
  */
 public class Prioriteettijono {

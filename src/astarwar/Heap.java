@@ -6,6 +6,8 @@ package astarwar;
 
 /**
  *
+ * ei käytössä
+ * 
  * @author pxkorpel
  */
 class Heap {
